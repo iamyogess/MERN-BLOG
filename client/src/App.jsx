@@ -1,7 +1,21 @@
-export default function App() {
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./pages/home/HomePage";
+import SinglePage from "./pages/SinglePage";
+import Register from "./pages/auth/Register";
+import Login from "./pages/auth/Login";
+
+const App = () => {
   return (
-    <h1 className="text-3xl font-bold underline text-red-500">
-      Hello world!
-    </h1>
-  )
-}
+    <>
+      <Routes>
+        <Route index path="/" element={<HomePage />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/singlepage/5" element={<SinglePage />} />
+      </Routes>
+    </>
+  );
+};
+
+export default App;

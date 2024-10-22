@@ -79,8 +79,8 @@ const Login = () => {
               )}
             </div>
 
-            <button className="px-10 py-4 mt-3 bg-black text-white w-full rounded-lg">
-              Login
+            <button className="px-10 py-4 mt-3 bg-black text-white w-full rounded-lg border-2 hover:border-black hover:bg-transparent hover:text-black transition duration-300">
+              LOGIN
             </button>
           </form>
           <div className="mt-2">

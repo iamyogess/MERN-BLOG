@@ -5,12 +5,15 @@ import { BiSolidCollection } from "react-icons/bi";
 import { FaUsersCog } from "react-icons/fa";
 import { HiOutlineMenu } from "react-icons/hi";
 import { CgClose } from "react-icons/cg";
+import { MdDashboardCustomize,MdCategory } from "react-icons/md";
+
+
 import { Link } from "react-router-dom";
 
 const AdminMenu = () => {
   const menuItems = [
     {
-      icon: <FaUsersCog />,
+      icon: <MdDashboardCustomize />,
       className: "h-6 w-auto",
       label: "Dashboard",
       link: "admin-dashboard",
@@ -20,6 +23,12 @@ const AdminMenu = () => {
       className: "h-6 w-auto",
       label: "Add Post",
       link: "add-post", // Add actual links here
+    },
+    {
+      icon: <MdCategory />,
+      className: "h-6 w-auto",
+      label: "Create Category",
+      link: "create-category", // Add actual links here
     },
     {
       icon: <GrUpdate />,

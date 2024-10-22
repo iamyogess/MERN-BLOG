@@ -47,7 +47,7 @@ const AdminLayout = () => {
         </div>
 
         {/* Main content */}
-        <div className="container mx-auto flex justify-center items-center h-80 bg-red-50 ml-8 text-xl md:text-2xl lg:text-4xl font-bold lg:font-extrabold">Admin Control Panel</div>
+        {/* <div className="container mx-auto flex justify-center items-center h-80 bg-red-50 ml-8 text-xl md:text-2xl lg:text-4xl font-bold lg:font-extrabold">Admin Control Panel</div> */}
         <div className="flex-1 px-4 py-1">
           <Outlet />
         </div>

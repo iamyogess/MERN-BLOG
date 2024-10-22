@@ -11,6 +11,7 @@ import ManagePost from "./pages/admin/pages/ManagePost";
 import ManageUsers from "./pages/admin/pages/ManageUsers";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/pages/AdminDashboard";
+import CreateCategory from "./pages/admin/pages/CreateCategory";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="admin-dashboard" element={<AdminDashboard />} />
           <Route path="add-post" element={<AddPost />} />
+          <Route path="create-category" element={<CreateCategory />} />
           <Route path="update-post" element={<UpdatePost />} />
           <Route path="manage-posts" element={<ManagePost />} />
           <Route path="manage-users" element={<ManageUsers />} />

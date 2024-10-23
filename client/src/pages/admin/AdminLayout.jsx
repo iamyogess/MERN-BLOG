@@ -41,6 +41,7 @@ const AdminLayout = () => {
         >
           <AdminMenu />
         </div>
+
         {/* DESKTOP SIDEBAR  */}
         <div className="hidden md:block w-64">
           <AdminMenu />

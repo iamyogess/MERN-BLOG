@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { TfiWrite } from "react-icons/tfi";
 import { GrUpdate } from "react-icons/gr";
 import { BiSolidCollection } from "react-icons/bi";
@@ -40,6 +40,11 @@ const AdminMenu = () => {
     },
   ];
 
+  const [clickNavLink, setClickNavLink] = useState(false);
+  const onClickNavItem = () => {
+    setClickNavLink((currentState) => !currentState);
+  };
+
   return (
     <nav
       className="max-w-xl w-full bg-white p-8 h-screen border shadow-lg rounded-md"
@@ -50,6 +55,7 @@ const AdminMenu = () => {
           <li
             key={item.label}
             className="flex items-center gap-4 py-4 px-4 w-full rounded-md hover:bg-gray-200"
+           
           >
             <span className="text-3xl">{item.icon}</span>
             <Link to={item.link} className="font-semibold border-b p-2">

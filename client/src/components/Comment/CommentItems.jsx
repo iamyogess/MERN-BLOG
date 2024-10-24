@@ -6,9 +6,9 @@ const CommentItems = ({ comment, addReply }) => {
   const inputRef = useRef(null);
 
   const handleReply = () => {
-    setShowReplyBox(!showReplyBox); // Toggle the visibility of the reply box
+    setShowReplyBox(true);
     setTimeout(() => {
-      inputRef.current.focus();
+      inputRef.current?.focus();
     }, 1);
   };
 
@@ -17,35 +17,53 @@ const CommentItems = ({ comment, addReply }) => {
     setReplyText("");
   };
 
+  const handleReplySave = (commentId) => {
+    addReply(commentId, replyText);
+    setShowReplyBox(false);
+    setReplyText("");
+  };
+
+  const handleKeyDown = (e, commentId) => {
+    if (e.key === "Enter") {
+      handleReplySave(commentId);
+    } else if (e.key === "Escape") {
+      handleCancelButton();
+    }
+  };
+
   return (
-    <div>
+    <div className="ml-4 mt-2">
       <li>
         {comment.display}
         {!showReplyBox && (
           <button
-            className="px-4 py-2 my-2 bg-purple-500 text-white font-bold mx-2 rounded-lg"
+            className="px-2 py-1 text-sm text-gray-600"
             onClick={handleReply}
           >
             Reply
           </button>
         )}
-        {/* Show reply box if showReplyBox is true */}
+
         {showReplyBox && (
           <>
             <br />
             <input
               type="text"
-              placeholder="Type your reply here"
+              className="p-1 w-full mb-1"
+              placeholder="Type your reply"
               ref={inputRef}
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
+              onKeyDown={(e) => handleKeyDown(e, comment.id)}
             />
-            <br />
-            <button className="px-4 py-2 my-2 bg-blue-500 text-white font-bold rounded-lg">
+            <button
+              className="px-3 py-1 bg-gray-600 text-white text-sm rounded mr-2"
+              onClick={() => handleReplySave(comment.id)}
+            >
               Save
             </button>
             <button
-              className="px-4 py-2 my-2 bg-gray-500 text-white font-bold rounded-lg"
+              className="px-3 py-1 bg-gray-400 text-white text-sm rounded"
               onClick={handleCancelButton}
             >
               Cancel
@@ -53,7 +71,6 @@ const CommentItems = ({ comment, addReply }) => {
           </>
         )}
 
-        {/* Nested comments */}
         {comment.children.length > 0 && (
           <ul>
             {comment.children.map((item) => (

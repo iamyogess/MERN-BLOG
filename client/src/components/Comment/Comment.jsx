@@ -46,14 +46,31 @@ const Comment = () => {
     }
   };
 
-  const addReply = () => {}; // Implement this if you want to add replies
+  const addReply = (parentId, text) => {
+    const copyComments = [...comments];
+    addComments(copyComments, parentId, text);
+    setComments(copyComments);
+  };
+
+  const addComments = (comments, parentId, text) => {
+    for (let i = 0; i < comments.length; i++) {
+      const comment = comments[i];
+      if (comment.id === parentId) {
+        comment.children.unshift(newComment(text));
+        return;
+      }
+      if (comment.children.length > 0) {
+        addComments(comment.children, parentId, text);
+      }
+    }
+  };
 
   return (
-    <section className="container w-full mx-auto my-6">
+    <section className="container w-full mx-auto my-4">
       <form onSubmit={handleNewComment}>
         <div>
           <input
-            className="outline px-8 py-2 my-3"
+            className="outline p-2 w-full mb-2"
             type="text"
             placeholder="Your Comment"
             name="comment"
@@ -65,7 +82,7 @@ const Comment = () => {
         <div>
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-500 text-white font-bold rounded-md"
+            className="px-3 py-1 bg-gray-600 text-white rounded"
           >
             Post
           </button>

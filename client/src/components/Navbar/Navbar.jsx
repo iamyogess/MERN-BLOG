@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { FaRegUserCircle } from "react-icons/fa";
 import { HiOutlineMenu } from "react-icons/hi";
 import { CgClose } from "react-icons/cg";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   // const [onScroll, setOnScroll] = useState(false);
   const [openMenu, setOpenMenu] = useState(false); // Set to false initially to start with menu closed
+  const [user, setUser] = useState(false);
 
   // const changeBackground = () => {
   //   if (window.scrollY >= 80) {
@@ -26,7 +28,7 @@ const Navbar = () => {
 
   return (
     <nav
-    className={`fixed top-0 left-0 w-full z-10 transition-all duration-300 ease-in-out bg-white shadow-md`}
+      className={`fixed top-0 left-0 w-full z-10 transition-all duration-300 ease-in-out bg-white shadow-md`}
     >
       <div className="container mx-auto px-4 flex justify-between items-center py-6">
         {/* LOGO */}
@@ -53,12 +55,7 @@ const Navbar = () => {
         </ul>
 
         {/* PROFILE */}
-        <div
-          className={`flex gap-x-2 justify-center items-center `}
-        >
-          <FaRegUserCircle className="text-2xl text-center mb-1" />
-          <span className="hidden md:block text-lg text-center">Name</span>
-
+        <div className={`flex gap-x-2 justify-center items-center `}>
           {/* HAMBURGER MENU */}
           <div className="md:hidden">
             <button
@@ -68,6 +65,23 @@ const Navbar = () => {
               {openMenu ? <CgClose /> : <HiOutlineMenu />}
             </button>
           </div>
+          {/* USER  */}
+          {user ? (
+            <>
+              <FaRegUserCircle className="text-2xl text-center mb-1" />
+              <span className="hidden md:block text-lg text-center">Name</span>
+            </>
+          ) : (
+            // login sign up button
+            <div className="hidden md:flex flex-row-reverse gap-x-2">
+              <button className="px-2 py-2 text-sm bg-black text-white rounded-lg border-2 hover:border-black hover:bg-transparent hover:text-black transition duration-300">
+                <Link to="/register">REGISTER</Link>
+              </button>
+              <button className="px-2 text-sm py-2 bg-black text-white rounded-lg border-2 hover:border-black hover:bg-transparent hover:text-black transition duration-300">
+                <Link to="/login">LOGIN</Link>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </nav>

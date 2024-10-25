@@ -1,0 +1,35 @@
+# Node modules
+/node_modules
+
+# Environment variables
+.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.log
+
+# Database dumps
+*.dump
+*.sql
+
+# Temporary files and build artifacts
+*.DS_Store
+*.vscode/
+.idea/
+*.swp
+tmp/
+dist/
+
+# Process manager files
+pids/
+*.pid
+*.seed
+
+# Coverage reports
+coverage/
+
+# OS-specific files
+Thumbs.db

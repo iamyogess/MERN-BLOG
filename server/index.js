@@ -7,6 +7,7 @@ import {
   errorResponseHandler,
   invalidPathHandler,
 } from "./middlewares/errorHandler.js";
+import userRoutes from "./routes/userRoute.js";
 
 //.env
 dotenv.config();
@@ -20,12 +21,16 @@ connectDB();
 app.use(express.json());
 app.use(cors());
 
+//define routes
+app.use("/api/users", userRoutes);
+
 //invalid path handlers
 app.use(invalidPathHandler);
 app.use(errorResponseHandler);
 
+
 //port
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
 //listening to the server
 app.listen(PORT, () => {

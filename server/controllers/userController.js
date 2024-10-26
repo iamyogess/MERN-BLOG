@@ -90,4 +90,4 @@ const getUserProfile = async (req, res, next) => {
   }
 };
 
-export { registerUser, loginUser };
+export { registerUser, loginUser,getUserProfile };

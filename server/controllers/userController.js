@@ -1,5 +1,6 @@
 import uploadPicture from "../middlewares/uploadPicture.js";
 import User from "../models/User.js";
+import fileRemover from "../utils/fileRemover.js";
 
 const registerUser = async (req, res, next) => {
   try {

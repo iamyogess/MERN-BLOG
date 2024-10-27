@@ -1,6 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 
 import connectDB from "./configs/connectDB.js";
 import {
@@ -24,10 +26,16 @@ app.use(cors());
 //define routes
 app.use("/api/users", userRoutes);
 
+// Define __dirname using ES module approach
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Static assets
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+
 //invalid path handlers
 app.use(invalidPathHandler);
 app.use(errorResponseHandler);
-
 
 //port
 const PORT = process.env.PORT || 5000;

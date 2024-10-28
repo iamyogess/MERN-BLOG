@@ -38,7 +38,7 @@ const updatePostCategory = async (req, res, next) => {
         new: true,
       }
     );
-    res.status(201).json({message:"updated post category: ",postCategory})
+    res.status(201).json({ message: "updated post category: ", postCategory });
   } catch (error) {
     next(error);
   }

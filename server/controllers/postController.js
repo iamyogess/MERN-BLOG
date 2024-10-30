@@ -137,3 +137,48 @@ const getPost = async (req, res, next) => {
     next(error);
   }
 };
+
+const getAllPosts = async (req, res, next) => {
+  try {
+    const filter = req.query.searchKeyboard;
+    let where = {};
+    if (filter) {
+      where.title = { $regex: filter, $options: "i" }; //i = case insensitive
+    }
+    let query = await Post.find(where);
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.limit) || 10;
+    const skip = (size - 1) * pageSize;
+    const total = await Post.find(where).countDocument();
+    const pages = Math.ceil(total / pageSize);
+
+    req.headers({
+      "x-filter": filter,
+      "x-totalCount": JSON.stringify(total),
+      "x-currentPage": JSON.stringify(page),
+      "x-pageSize": JSON.stringify(pageSize),
+      "x-totalPageCount": JSON.stringify(pages),
+    });
+
+    if (page > pages) {
+      // const error = new Error("No page found!");
+      // return next(error);
+      return res.json([]);
+    }
+
+    const result = await query
+      .skip(skip)
+      .limit(pageSize)
+      .populate([
+        {
+          path: "user",
+          select: ["avatar", "name", "verified"],
+        },
+      ])
+      .sort({ updatedAt: "descending" });
+
+    return res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};

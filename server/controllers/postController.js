@@ -1,3 +1,4 @@
+import Comment from "../models/Comment.js";
 import Post from "../models/Post.js";
 import uploadPicture from "./../middlewares/uploadPicture.js";
 import fileRemover from "./../utils/fileRemover";
@@ -78,4 +79,19 @@ const updatePost = async (req, res, next) => {
   }
 };
 
+const deletePost = async (req, res, next) => {
+  try {
+    const post = await Post.findOneAndDelete({ slug: req.params.slug });
+    if (!post) {
+      const error = new Error("Post was not found!");
+      next(error);
+      return;
+    }
 
+    await Comment.deleteMany({ post: post._id });
+
+    return res.json({ message: "Post deleted successfully!" });
+  } catch (error) {
+    next(error);
+  }
+};

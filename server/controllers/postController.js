@@ -182,3 +182,5 @@ const getAllPosts = async (req, res, next) => {
     next(error);
   }
 };
+
+export { createPost, getPost, getAllPosts, deletePost, updatePost };

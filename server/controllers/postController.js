@@ -1,4 +1,6 @@
-import Post from "../models/Post";
+import Post from "../models/Post.js";
+import uploadPicture from "./../middlewares/uploadPicture.js";
+import fileRemover from "./../utils/fileRemover";
 
 const createPost = async (req, res, next) => {
   try {
@@ -22,3 +24,58 @@ const createPost = async (req, res, next) => {
     next(error);
   }
 };
+
+const updatePost = async (req, res, next) => {
+  try {
+    const post = await Post.findOne({ slug: req.params.slug });
+
+    if (!post) {
+      const error = new Error("Post was not found!");
+      next(error);
+      return;
+    }
+
+    const upload = uploadPicture.single("postPicture");
+
+    const handleUpdateData = async (data) => {
+      const { title, caption, slug, body, tags, category } = JSON.parse(data);
+      post.title = title || post.title;
+      post.caption = caption || post.caption;
+      post.slug = slug || post.slug;
+      post.body = body || post.body;
+      post.tags = tags || post.tags;
+      post.category = category || post.category;
+
+      const updatePost = await post.save();
+      return res.json(updatePost);
+    };
+
+    upload(req, res, async function (err) {
+      if (err) {
+        const error = new Error(
+          "An unknown error occured when uploading " + err.message
+        );
+      } else {
+        if (req.file) {
+          let filename;
+          filename = post.photo;
+          if (filename) {
+            fileRemover(filename);
+          }
+          post.photo = req.file.filename;
+          handleUpdateData(req.body.document);
+        } else {
+          let filename;
+          filename = post.photo;
+          post.photo = "";
+          fileRemover(filename);
+          handleUpdateData(req.body.document);
+        }
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+

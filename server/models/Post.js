@@ -14,6 +14,12 @@ const postSchema = mongoose.Schema(
   { timestamps: true }
 );
 
+postSchema.virtual("comment", {
+  ref: "Comment",
+  localField: "_id",
+  foreignField: "post",
+});
+
 const Post = model("Post", postSchema);
 
 export default Post;

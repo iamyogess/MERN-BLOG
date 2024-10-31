@@ -1,7 +1,7 @@
 import Comment from "../models/Comment.js";
 import Post from "../models/Post.js";
 import uploadPicture from "./../middlewares/uploadPicture.js";
-import fileRemover from "./../utils/fileRemover";
+import fileRemover from "./../utils/fileRemover.js";
 
 const createPost = async (req, res, next) => {
   try {
@@ -19,7 +19,7 @@ const createPost = async (req, res, next) => {
     const savedData = newData.save();
     return res.status(200).json({
       message: "Post created successfully!",
-      newData,
+      savedData,
     });
   } catch (error) {
     next(error);
@@ -54,7 +54,7 @@ const updatePost = async (req, res, next) => {
     upload(req, res, async function (err) {
       if (err) {
         const error = new Error(
-          "An unknown error occured when uploading " + err.message
+          "An unknown error occurred when uploading " + err.message
         );
       } else {
         if (req.file) {

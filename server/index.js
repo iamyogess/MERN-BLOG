@@ -10,7 +10,7 @@ import {
   invalidPathHandler,
 } from "./middlewares/errorHandler.js";
 import userRoutes from "./routes/userRoute.js";
-import postRoutes from "./routes/postCategoryRoute.js";
+import postRoutes from "./routes/postRoute.js";
 import categoryRoutes from "./routes/postCategoryRoute.js";
 import commentRoutes from "./routes/commentRoute.js"
 

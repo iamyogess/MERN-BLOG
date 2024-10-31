@@ -12,6 +12,7 @@ import {
 import userRoutes from "./routes/userRoute.js";
 import postRoutes from "./routes/postCategoryRoute.js";
 import categoryRoutes from "./routes/postCategoryRoute.js";
+import commentRoutes from "./routes/commentRoute.js"
 
 //.env
 dotenv.config();
@@ -26,9 +27,10 @@ app.use(express.json());
 app.use(cors());
 
 //define routes
-app.use("/api/users", userRoutes);
+app.use("/api/user", userRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/post", postRoutes);
+app.use("/api/comment", commentRoutes);
 
 // Define __dirname using ES module approach
 const __filename = fileURLToPath(import.meta.url);

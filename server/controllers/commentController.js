@@ -48,7 +48,7 @@ const updateComment = async (req, res, next) => {
 const deleteComment = async (req, res, next) => {
   try {
     const comment = await Comment.findByIdAndDelete(req.params.commentId);
-    await Comment.deleteMany({ parent: comment.id });
+    await Comment.deleteMany({ parent: comment._id });
     if (!comment) {
       const error = new Error("Comment not found to delete!");
       return next(error);

@@ -10,6 +10,8 @@ import {
   invalidPathHandler,
 } from "./middlewares/errorHandler.js";
 import userRoutes from "./routes/userRoute.js";
+import postRoutes from "./routes/postCategoryRoute.js";
+import categoryRoutes from "./routes/postCategoryRoute.js";
 
 //.env
 dotenv.config();
@@ -25,6 +27,8 @@ app.use(cors());
 
 //define routes
 app.use("/api/users", userRoutes);
+app.use("/api/category", categoryRoutes);
+app.use("/api/post", postRoutes);
 
 // Define __dirname using ES module approach
 const __filename = fileURLToPath(import.meta.url);

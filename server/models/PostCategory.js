@@ -7,6 +7,6 @@ const postCategorySchema = mongoose.Schema(
   { timestamps: true }
 );
 
-const PostCategory = model(PostCategory, postCategorySchema);
+const PostCategory = model("PostCategory", postCategorySchema);
 
 export default PostCategory;

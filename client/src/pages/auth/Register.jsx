@@ -21,6 +21,8 @@ const Register = () => {
 
   const password = watch("password");
 
+  
+
   return (
     <MainLayout>
       <section className="mt-20 container mx-auto pt-10">
@@ -150,7 +152,7 @@ const Register = () => {
           </form>
           <div className="mt-2">
             <p>
-              Already have an account? <Link to="/login">Login here </Link>
+              Already have an account? <Link to="/login" className="text-blue-400">Login here </Link>
             </p>
           </div>
         </div>

@@ -1,9 +1,39 @@
 import MainLayout from "../../components/MainLayout";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useMutation } from "@tanstack/react-query";
+import { userAction } from "../../store/reducers/userReducer";
+import toast from "react-hot-toast";
+import { useEffect } from "react";
+import { signup } from "../../services/user";
 
 const Register = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const userState = useSelector((state) => state.user);
+
+  const { mutate, isLoading } = useMutation({
+    mutationFn: ({ name, email, password }) => {
+      return signup({ name, email, password });
+    },
+    onSuccess: (data) => {
+      dispatch(userAction.setUserInfo(data));
+      localStorage.setItem("account", JSON.stringify(data));
+    },
+    onError: (error) => {
+      console.log(error.message);
+      toast.error(error.message);
+    },
+  });
+
+  useEffect(() => {
+    if (userState.userInfo) {
+      navigate("/");
+    }
+  }, [navigate, userState.userInfo]);
+
   const {
     register,
     handleSubmit,
@@ -19,16 +49,19 @@ const Register = () => {
     mode: "onChange",
   });
 
-  const password = watch("password");
+  const submitHandler = (data) => {
+    const { name, email, password } = data;
+    mutate({ name, email, password });
+  };
 
-  
+  const password = watch("password");
 
   return (
     <MainLayout>
       <section className="mt-20 container mx-auto pt-10">
         <div className="flex items-center justify-center flex-col">
           <h1 className="text-4xl font-bold mb-6">Register</h1>
-          <form action="">
+          <form action="" onSubmit={handleSubmit(submitHandler)}>
             {/* NAME  */}
             <div className="flex justify-center items-start flex-col gap-y-2 my-2">
               <label htmlFor="name" className="font-semibold text-gray-500">
@@ -152,7 +185,10 @@ const Register = () => {
           </form>
           <div className="mt-2">
             <p>
-              Already have an account? <Link to="/login" className="text-blue-400">Login here </Link>
+              Already have an account?{" "}
+              <Link to="/login" className="text-blue-400">
+                Login here{" "}
+              </Link>
             </p>
           </div>
         </div>

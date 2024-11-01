@@ -1,8 +1,38 @@
 import { useForm } from "react-hook-form";
 import MainLayout from "../../components/MainLayout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useMutation } from "@tanstack/react-query";
+import { userAction } from "../../store/reducers/userReducer";
+import toast from "react-hot-toast";
+import { useEffect } from "react";
+import { login } from "../../services/user";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const userState = useSelector((state) => state.user);
+
+  const { mutate, isLoading } = useMutation({
+    mutationFn: ({ email, password }) => {
+      return login({ email, password });
+    },
+    onSuccess: (data) => {
+      dispatch(userAction.setUserInfo(data));
+      localStorage.setItem("account", JSON.stringify(data));
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error(error.message);
+    },
+  });
+
+  useEffect(() => {
+    if (userState.userInfo) {
+      navigate("/");
+    }
+  }, [navigate, userState.userInfo]);
+
   const {
     register,
     handleSubmit,
@@ -15,12 +45,17 @@ const Login = () => {
     mode: "onChange",
   });
 
+  const submitHandler = (data) => {
+    const { email, password } = data;
+    mutate({ email, password });
+  };
+
   return (
     <MainLayout>
       <section className="mt-20 container mx-auto pt-10">
         <div className="flex items-center justify-center flex-col">
           <h1 className="text-4xl font-bold mb-6">Login</h1>
-          <form action="">
+          <form action="" onSubmit={handleSubmit(submitHandler)}>
             {/* EMAIL  */}
             <div className="flex justify-center items-start flex-col gap-y-2">
               <label htmlFor="email" className="font-semibold text-gray-500">
@@ -85,7 +120,10 @@ const Login = () => {
           </form>
           <div className="mt-2">
             <p>
-              Don't have an account? <Link to="/register" className="text-blue-400">Register here </Link>
+              Don't have an account?{" "}
+              <Link to="/register" className="text-blue-400">
+                Register here{" "}
+              </Link>
             </p>
           </div>
         </div>

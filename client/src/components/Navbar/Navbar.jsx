@@ -3,12 +3,20 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { HiOutlineMenu } from "react-icons/hi";
 import { CgClose } from "react-icons/cg";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import logout from "../../store/action/user";
 
 const Navbar = () => {
+  const userState = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
   // const [onScroll, setOnScroll] = useState(false);
   const [openMenu, setOpenMenu] = useState(false); // Set to false initially to start with menu closed
-  const [user, setUser] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // menu to toggle when we click on profile icon
 
+  const toggleSmallMenu = () => {
+    setIsMenuOpen((prev) => !prev);
+  };
   // const changeBackground = () => {
   //   if (window.scrollY >= 80) {
   //     setOnScroll(true);
@@ -24,6 +32,10 @@ const Navbar = () => {
 
   const toggleMenu = () => {
     setOpenMenu((prevState) => !prevState); // Correctly toggles openMenu without argument
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
   };
 
   return (
@@ -66,11 +78,43 @@ const Navbar = () => {
             </button>
           </div>
           {/* USER  */}
-          {user ? (
-            <>
-              <FaRegUserCircle className="text-2xl text-center mb-1" />
-              <span className="hidden md:block text-lg text-center">Name</span>
-            </>
+          {userState.userInfo ? (
+            // <>
+            //   <FaRegUserCircle className="text-2xl text-center mb-1" />
+            //   <span className="hidden md:block text-lg text-center">
+            //     {userState?.userInfo?.name?.split(" ")[0]}
+            //   </span>
+            // </>
+            <div className="relative">
+              <div
+                onClick={toggleSmallMenu}
+                className="cursor-pointer flex gap-x-2"
+              >
+                <FaRegUserCircle className="text-2xl text-center mb-1" />
+                <span className="hidden md:block text-lg text-center">
+                  {userState?.userInfo?.name?.split(" ")[0]}
+                </span>
+              </div>
+
+              {isMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg z-10">
+                  <ul>
+                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      Profile
+                    </li>
+                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      Dashboard
+                    </li>
+                    <li
+                      onClick={handleLogout}
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    >
+                      Logout
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
           ) : (
             // login sign up button
             <div className="hidden md:flex flex-row-reverse gap-x-2">

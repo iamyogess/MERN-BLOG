@@ -1,5 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+
 import HomePage from "./pages/home/HomePage";
 import SinglePage from "./pages/SinglePage";
 import Register from "./pages/auth/Register";
@@ -34,6 +36,7 @@ const App = () => {
           <Route path="manage-users" element={<ManageUsers />} />
         </Route>
       </Routes>
+      {/* <Toaster /> */}
     </>
   );
 };

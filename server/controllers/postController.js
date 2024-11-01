@@ -56,6 +56,7 @@ const updatePost = async (req, res, next) => {
         const error = new Error(
           "An unknown error occurred when uploading " + err.message
         );
+        return next(error);
       } else {
         if (req.file) {
           let filename;

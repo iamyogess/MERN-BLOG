@@ -72,6 +72,7 @@ const loginUser = async (req, res, next) => {
 const getUserProfile = async (req, res, next) => {
   try {
     let user = await User.findById(req.user._id);
+    const token = await user.generateJWT();
     if (user) {
       return res.status(201).json({
         _id: user.id,
@@ -178,4 +179,10 @@ const uploadProfilePicture = async (req, res, next) => {
   }
 };
 
-export { registerUser, loginUser, getUserProfile, updateProfile };
+export {
+  registerUser,
+  loginUser,
+  getUserProfile,
+  updateProfile,
+  uploadProfilePicture,
+};

@@ -96,7 +96,7 @@ const Login = () => {
                 {...register("password", {
                   minLength: {
                     value: 6,
-                    message: "Password length must be at least 1 character!",
+                    message: "Password length must be at least 6 character!",
                   },
                   required: {
                     required: true,

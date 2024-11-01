@@ -15,6 +15,7 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/pages/AdminDashboard";
 import CreateCategory from "./pages/admin/pages/CreateCategory";
 import Comment from "./components/Comment/Comment";
+import Profile from "./pages/Profile";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
         <Route path="/explore" element={<ExploreAll />} />
         <Route path="/singlepage/5" element={<SinglePage />} />
         <Route path="/comment" element={<Comment />} />
+        <Route path="/profile" element={<Profile />} />
 
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="admin-dashboard" element={<AdminDashboard />} />

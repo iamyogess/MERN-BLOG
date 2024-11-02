@@ -5,7 +5,7 @@ import { ImArrowUpRight2 } from "react-icons/im";
 const BlogCard = () => {    
   return (
     <div className="group flex flex-col gap-y-2 p-4 border border-transparent hover:border-black transition-all duration-300 rounded-md">
-      <Link to="/single/5">
+      <Link to="/singlepage/5">
         <img
           src="https://images.unsplash.com/photo-1723242017539-39cd15eb75fd?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Post Image"

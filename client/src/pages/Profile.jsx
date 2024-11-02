@@ -28,7 +28,7 @@ const Profile = () => {
   });
 
   // update data
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isLoading: updateProfileIsLoading } = useMutation({
     mutationFn: ({ name, email, password }) => {
       return updateProfile({
         token: userState.userInfo.token,
@@ -184,8 +184,8 @@ const Profile = () => {
             </div>
 
             <button
-              disabled={!isValid}
-              className="px-10 py-4 mt-3 bg-green-500 text-white w-full rounded-lg border-2 hover:border-green-500 hover:bg-transparent hover:text-green-500 transition duration-300"
+              disabled={!isValid || profileIsLoading || updateProfileIsLoading}
+              className="px-10 py-4 mt-3 bg-green-500 text-white w-full rounded-lg border-2 hover:border-green-500 hover:bg-transparent hover:text-green-500 transition duration-300 disabled:opacity-70"
             >
               UPDATE
             </button>

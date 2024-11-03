@@ -75,4 +75,26 @@ const updateProfile = async ({ token, userData }) => {
   }
 };
 
-export { signup, login, getUserProfile, updateProfile };
+const uploadProfilePicture = async ({ token, formData }) => {
+  const config = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  try {
+    const { data } = await axios.put(
+      "http://127.0.0.1:5000/api/user/uploadProfilePicture",
+      formData,
+      config
+    );
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
+    throw new Error(error.message);
+  }
+};
+
+export { signup, login, getUserProfile, updateProfile, uploadProfilePicture };

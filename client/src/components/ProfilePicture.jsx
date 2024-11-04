@@ -28,6 +28,7 @@ const ProfilePicture = ({ avatar }) => {
             htmlFor="profilePicture"
             className="cursor-pointer absolute inset-0 rounded-full bg-transparent"
           >
+            {console.log(stables.UPLOAD_FOLDER_BASE_URL + avatar)}
             {avatar ? (
               <img
                 src={stables.UPLOAD_FOLDER_BASE_URL + avatar}

@@ -93,7 +93,6 @@ const Profile = () => {
               >
                 Name
               </label>
-              {console.log(profileData)}
               <input
                 type="text"
                 placeholder="Name"

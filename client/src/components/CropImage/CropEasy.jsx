@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { uploadProfilePicture } from "../../services/user";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
+import { userAction } from "../../store/reducers/userReducer";
 
 const CropEasy = ({ photo, setOpenCrop }) => {
   const userState = useSelector((state) => state.user);

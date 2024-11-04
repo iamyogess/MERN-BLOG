@@ -3,15 +3,53 @@ import { stables } from "../constants";
 import { HiOutlineCamera } from "react-icons/hi";
 import CropEasy from "./CropImage/CropEasy";
 import { createPortal } from "react-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { userAction } from "../store/reducers/userReducer";
+import { uploadProfilePicture } from "../services/user";
 
 const ProfilePicture = ({ avatar }) => {
+  const userState = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+
   const [openCrop, setOpenCrop] = useState(false);
   const [photo, setPhoto] = useState(null);
+
+  const { mutate, isLoading } = useMutation({
+    mutationFn: ({ token: token, formData: formData }) => {
+      return uploadProfilePicture({ token: token, formData: formData });
+    },
+    onSuccess: (data) => {
+      dispatch(userAction.setUserInfo(data));
+      setOpenCrop(false);
+      localStorage.setItem("account", JSON.stringify(data));
+      queryClient.invalidateQueries(["profile"]);
+      toast.success("Profile photo deleted!");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Unable to delete profile");
+    },
+  });
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setPhoto({ url: URL.createObjectURL(file), file: file });
     setOpenCrop(true);
+  };
+
+  const handleDeleteImage = () => {
+    if (window.confirm("Do you want to delete your profile picture?")) {
+      try {
+        const formData = new FormData();
+        formData.append("profilePicture", undefined);
+        mutate({ token: userState.userInfo.token, formData: formData });
+      } catch (error) {
+        toast.error(error.message);
+        console.log(error);
+      }
+    }
   };
 
   return (
@@ -51,6 +89,7 @@ const ProfilePicture = ({ avatar }) => {
         <button
           type="button"
           className="border border-red-500 rounded-lg px-4 py-2 text-red-500"
+          onClick={handleDeleteImage}
         >
           Delete
         </button>

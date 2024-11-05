@@ -3,19 +3,24 @@ import PostCategory from "../models/PostCategory.js";
 const createCategory = async (req, res, next) => {
   try {
     const { title } = req.body;
+
+    if (!title) {
+      return res.status(400).json({ message: "Title is required!" });
+    }
+
     const postCategory = await PostCategory.findOne({ title });
     if (postCategory) {
-      const error = new Error("Category already created!");
-      return next(error);
+      return res.status(400).json({ message: "Category already exists!" });
     }
-    const newPostCategory = new PostCategory({ title });
 
+    const newPostCategory = new PostCategory({ title });
     const savedPostCategory = await newPostCategory.save();
     return res.status(201).json(savedPostCategory);
   } catch (error) {
     next(error);
   }
 };
+
 
 const getPostCategory = async (req, res, next) => {
   try {

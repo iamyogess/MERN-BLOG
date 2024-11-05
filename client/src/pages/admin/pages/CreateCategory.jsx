@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
-import { createCategory, getCategories } from "../../../services/category";
+import {
+  createCategory,
+  deleteCategory,
+  getCategories,
+} from "../../../services/category";
 
 const CreateCategory = () => {
   const userState = useSelector((state) => state.user);
@@ -47,6 +51,35 @@ const CreateCategory = () => {
       return;
     }
     mutate({ title });
+  };
+
+  //delete category mutation
+  const { mutate: deleteCategoryMutate, isLoading: isDeletingCategory } =
+    useMutation({
+      mutationFn: ({ postCategoryId }) => {
+        return deleteCategory({
+          token: userState.userInfo.token,
+          postCategoryId,
+        });
+      },
+      onSuccess: () => {
+        toast.success("Category deleted successfully!");
+        console.log("Category deleted successfully!");
+        queryClient.invalidateQueries(["category"]);
+      },
+      onError: (error) => {
+        toast.error("Something went wrong, Unable to delete the category");
+        console.log(
+          "Something went wrong, Unable to delete the category",
+          error
+        );
+      },
+    });
+
+  const handleDeleteCategory = (postCategoryId) => {
+    if (window.confirm("Do you want to delete the category?")) {
+      deleteCategoryMutate({ postCategoryId });
+    }
   };
 
   return (
@@ -111,8 +144,12 @@ const CreateCategory = () => {
                         <button className="bg-blue-500 text-white px-3 py-1 rounded">
                           Update
                         </button>
-                        <button className="bg-red-500 text-white px-3 py-1 rounded">
-                          Delete
+                        <button
+                          onClick={() => handleDeleteCategory(category._id)}
+                          disabled={isDeletingCategory}
+                          className="bg-red-500 text-white px-3 py-1 rounded"
+                        >
+                          {isDeletingCategory ? "Deleting..." : "DELETE"}
                         </button>
                       </div>
                     </td>

@@ -57,21 +57,24 @@ const updateCategory = async ({ token, formData }) => {
   }
 };
 
-const deleteCategory = async ({ token }) => {
+const deleteCategory = async ({ token, postCategoryId }) => {
   try {
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
+    console.log(postCategoryId);
 
     const { data } = await axios.delete(
-      "http://localhost:5000/api/category/delete-category",
+      `http://localhost:5000/api/category/${postCategoryId}`,
       config
     );
     return data;
   } catch (error) {
-    console.log(error);
+    const errorMessage =
+      error.response?.data?.message || error.message || "An error occurred";
+    throw new Error(errorMessage);
   }
 };
 

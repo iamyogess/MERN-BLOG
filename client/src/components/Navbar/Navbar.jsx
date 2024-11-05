@@ -44,14 +44,24 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 flex justify-between items-center py-6">
         {/* LOGO */}
-        <div className={`text-2xl font-bold `}>LOGO</div>
+        <div className={`text-2xl font-bold cursor-pointer`}>
+          <Link to="/">LOGO</Link>
+        </div>
 
         {/* DESKTOP MENU */}
-        <ul className={`hidden md:flex gap-x-5 text-lg `}>
-          <li>Home</li>
-          <li>About</li>
-          <li>Services</li>
-          <li>Contact</li>
+        <ul className="hidden md:flex gap-x-5 text-lg">
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/about">About</Link>
+          </li>
+          <li>
+            <Link to="/services">Services</Link>
+          </li>
+          <li>
+            <Link to="/contact">Contact</Link>
+          </li>
         </ul>
 
         {/* MOBILE MENU */}
@@ -60,10 +70,18 @@ const Navbar = () => {
             openMenu ? "translate-x-0" : "-translate-x-full"
           } text-black`}
         >
-          <li className="text-2xl cursor-pointer">Home</li>
-          <li className="text-2xl cursor-pointer">About</li>
-          <li className="text-2xl cursor-pointer">Services</li>
-          <li className="text-2xl cursor-pointer">Contact</li>
+          <li className="text-2xl cursor-pointer">
+            <Link to="/">Home</Link>
+          </li>
+          <li className="text-2xl cursor-pointer">
+            <Link to="/about">About</Link>
+          </li>
+          <li className="text-2xl cursor-pointer">
+            <Link to="/services">Services</Link>
+          </li>
+          <li className="text-2xl cursor-pointer">
+            <Link to="/contact">Contact</Link>
+          </li>
         </ul>
 
         {/* PROFILE */}

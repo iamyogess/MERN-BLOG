@@ -7,11 +7,17 @@ import {
   deleteCategory,
   getCategories,
 } from "../../../services/category";
+import { createPortal } from "react-dom";
+import UpdateCategory from "../../../components/updateCategory";
 
 const CreateCategory = () => {
   const userState = useSelector((state) => state.user);
-  const [title, setTitle] = useState("");
   const queryClient = useQueryClient();
+  const [title, setTitle] = useState("");
+  //update cat
+  const [updateCategoryPortal, setUpdateCategoryPortal] = useState(false);
+  const [categoryValue, setCategoryValue] = useState("");
+  const [categoryId, setCategoryId] = useState(null);
 
   const {
     data: categories,
@@ -53,7 +59,7 @@ const CreateCategory = () => {
     mutate({ title });
   };
 
-  //delete category mutation
+  // Delete category mutation
   const { mutate: deleteCategoryMutate, isLoading: isDeletingCategory } =
     useMutation({
       mutationFn: ({ postCategoryId }) => {
@@ -82,6 +88,13 @@ const CreateCategory = () => {
     }
   };
 
+  // update
+  const handleUpdateClick = (postCategoryId, postCategoryTitle) => {
+    setUpdateCategoryPortal(true);
+    setCategoryId(postCategoryId);
+    setCategoryValue(postCategoryTitle);
+  };
+
   return (
     <section className="w-full max-h-full container mx-auto">
       <h1 className="text-center font-extrabold text-2xl lg:text-4xl py-5">
@@ -108,6 +121,16 @@ const CreateCategory = () => {
           {isLoading ? "Creating..." : "CREATE"}
         </button>
       </form>
+
+      {updateCategoryPortal &&
+        createPortal(
+          <UpdateCategory
+            categoryId={categoryId}
+            categoryValue={categoryValue}
+            setUpdateCategoryPortal={setUpdateCategoryPortal}
+          />,
+          document.getElementById("portal")
+        )}
 
       {/* All Categories */}
       <div className="flex flex-col justify-center items-center my-10">
@@ -141,7 +164,12 @@ const CreateCategory = () => {
                     </td>
                     <td className="border border-gray-300 px-4 py-2">
                       <div className="flex space-x-2">
-                        <button className="bg-blue-500 text-white px-3 py-1 rounded">
+                        <button
+                          onClick={() =>
+                            handleUpdateClick(category._id, category.title)
+                          }
+                          className="bg-blue-500 text-white px-3 py-1 rounded"
+                        >
                           Update
                         </button>
                         <button

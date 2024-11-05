@@ -38,7 +38,7 @@ const createCategory = async ({ token, title }) => {
   }
 };
 
-const updateCategory = async ({ token, formData }) => {
+const updateCategory = async ({ token, postCategoryId, updatedCategory }) => {
   try {
     const config = {
       headers: {
@@ -47,13 +47,15 @@ const updateCategory = async ({ token, formData }) => {
     };
 
     const { data } = await axios.put(
-      "http://localhost:5000/api/category/update-category",
-      formData,
+      `http://localhost:5000/api/category/update-category/${postCategoryId}`,
+      { title: updatedCategory },
       config
     );
     return data;
   } catch (error) {
-    console.log(error);
+    const errorMessage =
+      error.response?.data?.message || error.message || "An error occurred";
+    throw new Error(errorMessage);
   }
 };
 

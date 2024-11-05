@@ -38,13 +38,20 @@ const updatePostCategory = async (req, res, next) => {
         new: true,
       }
     );
-    res.status(201).json({ message: "updated post category: ", postCategory });
+    res.status(201).json({ message: "Updated post category: ", postCategory });
   } catch (error) {
     next(error);
   }
 };
 
-const deletePostCategory = async (req, res, next) => {};
+const deletePostCategory = async (req, res, next) => {
+  try {
+    await PostCategory.findByIdAndDelete(req.params.postCategoryId);
+    res.status(200).json({ message: "Post category deleted!" });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export {
   createCategory,

@@ -1,16 +1,9 @@
 import axios from "axios";
 
-const getCategories = async ({ token }) => {
+const getCategories = async () => {
   try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
     const { data } = await axios.get(
-      "http://localhost:5000/api/category/get-categories",
-      config
+      "http://localhost:5000/api/category/get-categories"
     );
     return data;
   } catch (error) {

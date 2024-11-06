@@ -45,7 +45,10 @@ const UpdateCategory = ({
   };
 
   return (
-    <section className="w-full container mx-auto fixed z-[1000] inset-0 flex justify-center p-5 overflow-auto">
+    <section className="w-full container mx-auto fixed z-[1000] inset-0 flex justify-center p-5 overflow-hidden bg-white/30 backdrop-blur-lg rounded-lg shadow-lg">
+      <div className="absolute top-6 right-6 text-3xl font-bold cursor-pointer" onClick={()=> setUpdateCategoryPortal(false)}>
+        x
+      </div>
       <form
         className="flex justify-center items-center h-full mt-20 gap-x-3"
         onSubmit={handleUpdateCategorySubmit}

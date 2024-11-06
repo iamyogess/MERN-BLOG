@@ -123,9 +123,11 @@ const Navbar = () => {
                       </li>
                     </Link>
 
-                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                      Dashboard
-                    </li>
+                    {userState?.userInfo?.admin && (
+                      <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                        Dashboard
+                      </li>
+                    )}
                     <li
                       onClick={handleLogout}
                       className="px-4 py-2 hover:bg-gray-100 cursor-pointer"

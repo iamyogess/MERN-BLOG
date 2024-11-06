@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import MultiSelectTagDropdown from "../components/MultiSelectTagDropdown";
 import { getCategories } from "../../../services/category";
+import CreatableSelect from "react-select/creatable";
 
 // Utility function to format category options for the dropdown
 const categoryToOption = (category) => ({
@@ -181,7 +182,7 @@ const AddPost = () => {
           >
             Tags
           </label>
-          <input
+          {/* <input
             type="text"
             name="tags"
             id="tags"
@@ -189,6 +190,13 @@ const AddPost = () => {
             placeholder="Select Tags"
             aria-label="Select Tags"
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+          /> */}
+          <CreatableSelect
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+            id="tags"
+            defaultValue={null}
+            isMulti
+            onChange={(newValue) => setTags(newValue.map((item) => item.value))}
           />
         </div>
         <div className="flex items-start flex-col w-full max-w-xs">

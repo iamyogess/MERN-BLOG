@@ -1,15 +1,15 @@
-import mongoose, { model, mongo, Schema } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 
 const postSchema = mongoose.Schema(
   {
     title: { type: String, required: true },
     caption: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
-    body: { type: Object, required: true },
+    body: { type: mongoose.Schema.Types.Mixed, required: true },
     photo: { type: String, required: true },
     user: { type: Schema.Types.ObjectId, ref: "User" },
     tags: { type: [String] },
-    categories: { type: Schema.Types.ObjectId, ref: "PostCategory" },
+    category: { type: Schema.Types.ObjectId, ref: "PostCategory" },
   },
   { timestamps: true }
 );

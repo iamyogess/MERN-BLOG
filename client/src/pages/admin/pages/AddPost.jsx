@@ -6,14 +6,14 @@ import { toast } from "react-hot-toast";
 import MultiSelectTagDropdown from "../components/MultiSelectTagDropdown";
 import { getCategories } from "../../../services/category";
 import CreatableSelect from "react-select/creatable";
+import { HiOutlineCamera } from "react-icons/hi";
+import { createPost } from "../../../services/post";
 
-// Utility function to format category options for the dropdown
 const categoryToOption = (category) => ({
   value: category._id,
   label: category.title,
 });
 
-// Utility function to filter categories based on input value
 const filterCategories = (inputValue, categoryData) => {
   return categoryData
     .map(categoryToOption)
@@ -22,7 +22,6 @@ const filterCategories = (inputValue, categoryData) => {
     );
 };
 
-// Function to load filtered options for the MultiSelectTagDropdown
 const promiseOptions = async (inputValue) => {
   try {
     const categoriesData = await getCategories();
@@ -31,7 +30,6 @@ const promiseOptions = async (inputValue) => {
       console.log("No categories data found or data is not an array.");
       return [];
     }
-    // Filter categories based on inputValue
     return filterCategories(inputValue, categoriesData);
   } catch (error) {
     console.log("Error in promiseOptions:", error);
@@ -47,13 +45,15 @@ const AddPost = () => {
   const [photo, setPhoto] = useState(null);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState([]);
-  const [tags, setTags] = useState("");
+  const [tags, setTags] = useState([]);
   const [body, setBody] = useState("");
   const [caption, setCaption] = useState("");
-  //post data
+
   const { mutate: mutateCreatePostDetails, isLoading: isLoadingPostDetails } =
     useMutation({
-      mutationFn: (blogData, token) => {
+      mutationFn: ({ token, blogData }) => {
+        console.log(userState.userInfo.token);
+        console.log(blogData);
         return createPost({ token, blogData });
       },
       onSuccess: () => {
@@ -72,10 +72,11 @@ const AddPost = () => {
     setPhoto(file);
   };
 
-  const handleCreatePost = async () => {
+  const handleCreatePost = async (e) => {
+    e.preventDefault();
     let newData = new FormData();
 
-    if (!photo) {
+    if (photo) {
       newData.append("postPicture", photo);
     }
     newData.append(
@@ -83,10 +84,7 @@ const AddPost = () => {
       JSON.stringify({ title, category, tags, caption, body })
     );
 
-    mutateCreatePostDetails({
-      newData,
-      token: userState.userInfo.token,
-    });
+    mutateCreatePostDetails({ token: userState.userInfo.token, newData });
   };
 
   const handleDeleteImage = () => {
@@ -100,18 +98,40 @@ const AddPost = () => {
       <h1 className="text-center font-extrabold text-2xl lg:text-4xl py-2">
         Create Post
       </h1>
-      <form className="flex justify-center items-center flex-col h-full mt-5 gap-6">
-        <div className="flex items-start flex-col w-full max-w-xs">
+      <form
+        onSubmit={handleCreatePost}
+        encType="multipart/form-data"
+        className="flex justify-center items-center flex-col h-full mt-5 gap-6"
+      >
+        <div className="flex items-start flex-col w-full max-w-xs gap-y-4">
           <label
             htmlFor="image"
-            className="py-1 text-sm md:text-lg text-gray-600"
+            className="py-1 text-sm md:text-lg text-gray-600 w-full"
           >
-            Select an image
+            {photo ? (
+              <img
+                src={URL.createObjectURL(photo)}
+                alt="Blog Photo"
+                className="rounded-xl w-full"
+              />
+            ) : (
+              <div className="w-full min-h-[200px] bg-blue-50/50 flex justify-center items-center rounded-xl">
+                <HiOutlineCamera className="w-7 h-auto text-primary" />
+              </div>
+            )}
+            <button
+              type="button"
+              onClick={handleDeleteImage}
+              className="px-6 py-3 my-2 w-full bg-red-500 border-2 text-white rounded-lg border-red-500 hover:bg-transparent hover:text-red-500 transition duration-300"
+            >
+              Remove Image
+            </button>
           </label>
           <input
             type="file"
             name="image"
             id="image"
+            onChange={handleFileChange}
             aria-label="Select an image"
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"
           />
@@ -127,6 +147,7 @@ const AddPost = () => {
             type="text"
             name="title"
             id="title"
+            value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Enter Title"
             aria-label="New Title"
@@ -144,6 +165,7 @@ const AddPost = () => {
             type="text"
             name="caption"
             id="caption"
+            value={caption}
             onChange={(e) => setCaption(e.target.value)}
             placeholder="Enter Caption"
             aria-label="New Caption"
@@ -157,22 +179,13 @@ const AddPost = () => {
           >
             Category
           </label>
-          {/* <input
-            type="text"
-            name="category"
-            id="category"
-            onChange={(e) => setCategory(e.target.value)}
-            placeholder="Select Category"
-            aria-label="Select Category"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
-          /> */}
           <MultiSelectTagDropdown
             loadOptions={promiseOptions}
             defaultValue={null}
             onChange={(newValue) =>
               setCategory(newValue.map((item) => item.value))
             }
-            className={`w-full px-4 py-3 border border-gray-300 rounded-lg`}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
           />
         </div>
         <div className="flex items-start flex-col w-full max-w-xs">
@@ -182,15 +195,6 @@ const AddPost = () => {
           >
             Tags
           </label>
-          {/* <input
-            type="text"
-            name="tags"
-            id="tags"
-            onChange={(e) => setTags(e.target.value)}
-            placeholder="Select Tags"
-            aria-label="Select Tags"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
-          /> */}
           <CreatableSelect
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"
             id="tags"
@@ -210,6 +214,7 @@ const AddPost = () => {
             name="description"
             id="description"
             rows="5"
+            value={body}
             onChange={(e) => setBody(e.target.value)}
             placeholder="Write Description"
             aria-label="Write Description"

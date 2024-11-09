@@ -3,39 +3,10 @@ import { useSelector } from "react-redux";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import MultiSelectTagDropdown from "../components/MultiSelectTagDropdown";
-import { getCategories } from "../../../services/category";
-import CreatableSelect from "react-select/creatable";
+// import MultiSelectTagDropdown from "../components/MultiSelectTagDropdown"; (if available)
+// import CreatableSelect from "react-select/creatable"; (if available)
 import { HiOutlineCamera } from "react-icons/hi";
 import { createPost } from "../../../services/post";
-
-const categoryToOption = (category) => ({
-  value: category._id,
-  label: category.title,
-});
-
-const filterCategories = (inputValue, categoryData) => {
-  return categoryData
-    .map(categoryToOption)
-    .filter((category) =>
-      category.label.toLowerCase().includes(inputValue.toLowerCase())
-    );
-};
-
-const promiseOptions = async (inputValue) => {
-  try {
-    const categoriesData = await getCategories();
-
-    if (!Array.isArray(categoriesData)) {
-      console.log("No categories data found or data is not an array.");
-      return [];
-    }
-    return filterCategories(inputValue, categoriesData);
-  } catch (error) {
-    console.log("Error in promiseOptions:", error);
-    return [];
-  }
-};
 
 const AddPost = () => {
   const userState = useSelector((state) => state.user);
@@ -44,17 +15,14 @@ const AddPost = () => {
 
   const [photo, setPhoto] = useState(null);
   const [title, setTitle] = useState("");
-  const [category, setCategory] = useState([]);
-  const [tags, setTags] = useState([]);
+  const [category, setCategory] = useState("");
+  const [tags, setTags] = useState("");
   const [body, setBody] = useState("");
-  const [caption, setCaption] = useState("");
 
   const { mutate: mutateCreatePostDetails, isLoading: isLoadingPostDetails } =
     useMutation({
-      mutationFn: ({ token, blogData }) => {
-        console.log(userState.userInfo.token);
-        console.log(blogData);
-        return createPost({ token, blogData });
+      mutationFn: () => {
+        return createPost();
       },
       onSuccess: () => {
         queryClient.invalidateQueries(["blog"]);
@@ -72,21 +40,6 @@ const AddPost = () => {
     setPhoto(file);
   };
 
-  const handleCreatePost = async (e) => {
-    e.preventDefault();
-    let newData = new FormData();
-
-    if (photo) {
-      newData.append("postPicture", photo);
-    }
-    newData.append(
-      "document",
-      JSON.stringify({ title, category, tags, caption, body })
-    );
-
-    mutateCreatePostDetails({ token: userState.userInfo.token, newData });
-  };
-
   const handleDeleteImage = () => {
     if (window.confirm("Do you want to delete this picture?")) {
       setPhoto(null);
@@ -99,7 +52,6 @@ const AddPost = () => {
         Create Post
       </h1>
       <form
-        onSubmit={handleCreatePost}
         encType="multipart/form-data"
         className="flex justify-center items-center flex-col h-full mt-5 gap-6"
       >
@@ -147,28 +99,8 @@ const AddPost = () => {
             type="text"
             name="title"
             id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
             placeholder="Enter Title"
             aria-label="New Title"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
-          />
-        </div>
-        <div className="flex items-start flex-col w-full max-w-xs">
-          <label
-            htmlFor="caption"
-            className="py-1 text-sm md:text-lg text-gray-600"
-          >
-            Caption
-          </label>
-          <input
-            type="text"
-            name="caption"
-            id="caption"
-            value={caption}
-            onChange={(e) => setCaption(e.target.value)}
-            placeholder="Enter Caption"
-            aria-label="New Caption"
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"
           />
         </div>
@@ -179,12 +111,12 @@ const AddPost = () => {
           >
             Category
           </label>
-          <MultiSelectTagDropdown
-            loadOptions={promiseOptions}
-            defaultValue={null}
-            onChange={(newValue) =>
-              setCategory(newValue.map((item) => item.value))
-            }
+          <input
+            type="text"
+            name="category"
+            id="category"
+            placeholder="Enter Category"
+            aria-label="New Category"
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"
           />
         </div>
@@ -195,27 +127,26 @@ const AddPost = () => {
           >
             Tags
           </label>
-          <CreatableSelect
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+          <input
+            type="text"
+            name="tags"
             id="tags"
-            defaultValue={null}
-            isMulti
-            onChange={(newValue) => setTags(newValue.map((item) => item.value))}
+            placeholder="Enter tags"
+            aria-label="New tags"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
           />
         </div>
         <div className="flex items-start flex-col w-full max-w-xs">
           <label
-            htmlFor="description"
+            htmlFor="body"
             className="py-1 text-sm md:text-lg text-gray-600"
           >
-            Description
+            Body
           </label>
           <textarea
-            name="description"
-            id="description"
+            name="body"
+            id="body"
             rows="5"
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
             placeholder="Write Description"
             aria-label="Write Description"
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"

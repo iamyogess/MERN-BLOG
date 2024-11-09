@@ -6,50 +6,7 @@ import { v4 as uuid4 } from "uuid";
 
 const createPost = async (req, res, next) => {
   try {
-    const { title, caption, category, body, tags } = req.body;
-
-    // Parse arrays if needed
-    const parsedCategory =
-      typeof category === "string" ? JSON.parse(category) : category;
-    const parsedTags = typeof tags === "string" ? JSON.parse(tags) : tags;
-
-    // Check if all required fields are present
-    if (!title || !caption || !parsedCategory || !body) {
-      return res.status(400).json({ message: "All fields are required!" });
-    }
-
-    // Handle file upload
-    uploadPicture.single("postPicture")(req, res, async (err) => {
-      if (err) {
-        return next(new Error("Error uploading file: " + err.message));
-      }
-
-      let photo;
-      if (req.file) {
-        photo = req.file.filename; // Ensure filename is properly assigned
-      }
-
-      // Create a new post instance
-      const newPost = new Post({
-        title,
-        caption,
-        category: parsedCategory,
-        slug: uuid4(),
-        photo,
-        body,
-        tags: parsedTags,
-        user: req.user._id, // Ensure req.user is set correctly
-      });
-
-      // Save the new post to the database
-      const createdPost = await newPost.save();
-
-      return res.status(201).json({
-        success: true,
-        message: "Post created successfully",
-        post: createdPost,
-      });
-    });
+   
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

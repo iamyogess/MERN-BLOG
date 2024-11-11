@@ -1,10 +1,9 @@
 import axios from "axios";
 
-const createPost = async ({token, blogData}) => {
+const createPost = async ({ token, blogData }) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json", // Ensure the content type is set if you're sending JSON
     },
   };
 
@@ -14,9 +13,8 @@ const createPost = async ({token, blogData}) => {
       blogData,
       config
     );
-    return data; // Return the response data directly
+    return data;
   } catch (error) {
-    // Improved error handling
     const errorMessage =
       error.response?.data?.message || error.message || "An error occurred";
     console.error("Error creating post:", errorMessage); // Log the error for debugging

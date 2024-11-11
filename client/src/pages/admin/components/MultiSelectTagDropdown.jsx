@@ -9,11 +9,12 @@ const MultiSelectTagDropdown = ({
 }) => {
   return (
     <AsyncSelect
-      defaultValue={defaultValue}
+      defaultValue={defaultValue}  // Set defaultValue to manage selected options
       defaultOptions
-      isMulti
-      loadOptions={loadOptions}
-      className={`${className}`}
+      isMulti  // Allow multiple selections
+      loadOptions={loadOptions}  // Load options from the provided function
+      onChange={onChangeFunction}  // Use the onChange function to handle selected values
+      className={className}  // Apply the custom class
     />
   );
 };

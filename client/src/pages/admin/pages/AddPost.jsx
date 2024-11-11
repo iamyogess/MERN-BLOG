@@ -1,12 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-// import MultiSelectTagDropdown from "../components/MultiSelectTagDropdown"; (if available)
-// import CreatableSelect from "react-select/creatable"; (if available)
 import { HiOutlineCamera } from "react-icons/hi";
 import { createPost } from "../../../services/post";
+import MultiSelectTagDropdown from "../components/MultiSelectTagDropdown";
+import CreatableSelect from "react-select/creatable";
+import { getCategories } from "../../../services/category";
+
+const categoryToOption = (category) => ({
+  value: category._id,
+  label: category.title,
+});
+
+const filterCategories = (inputValue, categoryData) => {
+  return categoryData
+    .map(categoryToOption)
+    .filter((category) =>
+      category.label.toLowerCase().includes(inputValue.toLowerCase())
+    );
+};
+
+const promiseOptions = async (inputValue) => {
+  try {
+    const categoriesData = await getCategories();
+
+    if (!Array.isArray(categoriesData)) {
+      console.log("No categories data found or data is not an array.");
+      return [];
+    }
+    return filterCategories(inputValue, categoriesData);
+  } catch (error) {
+    console.log("Error in promiseOptions:", error);
+    return [];
+  }
+};
 
 const AddPost = () => {
   const userState = useSelector((state) => state.user);
@@ -15,22 +44,21 @@ const AddPost = () => {
 
   const [photo, setPhoto] = useState(null);
   const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
-  const [tags, setTags] = useState("");
+  const [caption, setCaption] = useState("");
+  const [category, setCategory] = useState([]);
+  const [tags, setTags] = useState([]);
   const [body, setBody] = useState("");
 
   const { mutate: mutateCreatePostDetails, isLoading: isLoadingPostDetails } =
     useMutation({
-      mutationFn: () => {
-        return createPost();
-      },
+      mutationFn: ({ token, blogData }) => createPost({ token, blogData }),
       onSuccess: () => {
         queryClient.invalidateQueries(["blog"]);
         toast.success("Post is created!");
         navigate("/");
       },
       onError: (error) => {
-        toast.error(error.message);
+        toast.error(error.message || "An error occurred.");
         console.log(error);
       },
     });
@@ -46,6 +74,32 @@ const AddPost = () => {
     }
   };
 
+  const handlePostCreate = (e) => {
+    e.preventDefault();
+
+    let newData = new FormData();
+    if (!photo) {
+      toast.error("You must upload photo!");
+      console.log("You must upload a Photo!");
+    }
+    newData.append("postPicture", photo);
+
+    newData.append("title", title);
+    newData.append("caption", caption);
+    newData.append("category", category);
+    newData.append("tags", tags);
+    newData.append("body", body);
+
+    try {
+      mutateCreatePostDetails({
+        blogData: newData,
+        token: userState.userInfo.token,
+      });
+    } catch (error) {
+      console.error("Error creating post", error);
+    }
+  };
+
   return (
     <section className="w-full max-h-full container mx-auto px-4">
       <h1 className="text-center font-extrabold text-2xl lg:text-4xl py-2">
@@ -53,8 +107,10 @@ const AddPost = () => {
       </h1>
       <form
         encType="multipart/form-data"
+        onSubmit={handlePostCreate}
         className="flex justify-center items-center flex-col h-full mt-5 gap-6"
       >
+        {/* Photo Section */}
         <div className="flex items-start flex-col w-full max-w-xs gap-y-4">
           <label
             htmlFor="image"
@@ -81,13 +137,15 @@ const AddPost = () => {
           </label>
           <input
             type="file"
-            name="image"
+            name="postPicture"
             id="image"
             onChange={handleFileChange}
             aria-label="Select an image"
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"
           />
         </div>
+
+        {/* Title Section */}
         <div className="flex items-start flex-col w-full max-w-xs">
           <label
             htmlFor="title"
@@ -99,11 +157,33 @@ const AddPost = () => {
             type="text"
             name="title"
             id="title"
+            onChange={(e) => setTitle(e.target.value)}
             placeholder="Enter Title"
             aria-label="New Title"
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"
           />
         </div>
+
+        {/* Caption Section */}
+        <div className="flex items-start flex-col w-full max-w-xs">
+          <label
+            htmlFor="caption"
+            className="py-1 text-sm md:text-lg text-gray-600"
+          >
+            Caption
+          </label>
+          <input
+            type="text"
+            name="caption"
+            id="caption"
+            onChange={(e) => setCaption(e.target.value)}
+            placeholder="Enter caption"
+            aria-label="New caption"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+          />
+        </div>
+
+        {/* Category Section */}
         <div className="flex items-start flex-col w-full max-w-xs">
           <label
             htmlFor="category"
@@ -111,15 +191,17 @@ const AddPost = () => {
           >
             Category
           </label>
-          <input
-            type="text"
-            name="category"
-            id="category"
-            placeholder="Enter Category"
-            aria-label="New Category"
+          <MultiSelectTagDropdown
+            loadOptions={promiseOptions}
+            defaultValue={category} // Pass category state as default value
+            onChangeFunction={(newValue) => {
+              setCategory(newValue.map((item) => item.value)); // Update category state
+            }}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"
           />
         </div>
+
+        {/* Tags Section */}
         <div className="flex items-start flex-col w-full max-w-xs">
           <label
             htmlFor="tags"
@@ -127,15 +209,16 @@ const AddPost = () => {
           >
             Tags
           </label>
-          <input
-            type="text"
-            name="tags"
-            id="tags"
-            placeholder="Enter tags"
-            aria-label="New tags"
+          <CreatableSelect
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+            id="tags"
+            defaultValue={null}
+            isMulti
+            onChange={(newValue) => setTags(newValue.map((item) => item.value))}
           />
         </div>
+
+        {/* Body Section */}
         <div className="flex items-start flex-col w-full max-w-xs">
           <label
             htmlFor="body"
@@ -146,18 +229,21 @@ const AddPost = () => {
           <textarea
             name="body"
             id="body"
+            onChange={(e) => setBody(e.target.value)}
             rows="5"
             placeholder="Write Description"
-            aria-label="Write Description"
+            aria-label="Post Body"
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"
           />
         </div>
+
+        {/* Submit Button */}
         <button
           type="submit"
           aria-label="Create Post"
           className="px-6 py-3 bg-black text-white rounded-lg border-2 hover:border-black hover:bg-transparent hover:text-black transition duration-300"
         >
-          CREATE
+          {isLoadingPostDetails ? "Submitting..." : "CREATE"}
         </button>
       </form>
     </section>

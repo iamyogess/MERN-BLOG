@@ -9,7 +9,7 @@ const createPost = async (req, res, next) => {
     const upload = uploadPicture.single("postPicture");
     upload(req, res, async function (err) {
       const { title, caption, body, category, tags } = req.body;
-      
+
       if (!title || !caption || !body || !category || !tags) {
         return res.status(400).json({ message: "All fields are required!" });
       }

@@ -12,7 +12,7 @@ import {
 import userRoutes from "./routes/userRoute.js";
 import postRoutes from "./routes/postRoute.js";
 import categoryRoutes from "./routes/postCategoryRoute.js";
-import commentRoutes from "./routes/commentRoute.js"
+import commentRoutes from "./routes/commentRoute.js";
 
 //.env
 dotenv.config();
@@ -23,6 +23,7 @@ const app = express();
 connectDB();
 
 //middlewares
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
@@ -38,6 +39,7 @@ const __dirname = path.dirname(__filename);
 
 // Static assets
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+
 
 //invalid path handlers
 app.use(invalidPathHandler);

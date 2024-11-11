@@ -6,8 +6,46 @@ import { v4 as uuid4 } from "uuid";
 
 const createPost = async (req, res, next) => {
   try {
-   
+    const upload = uploadPicture.single("postPicture");
+    upload(req, res, async function (err) {
+      const { title, caption, body, category, tags } = req.body;
+      
+      if (!title || !caption || !body || !category || !tags) {
+        return res.status(400).json({ message: "All fields are required!" });
+      }
+      const user = req.user._id;
+
+      if (err) {
+        const error = new Error(
+          "An unknown error occurred while uploading photo!" + err.message
+        );
+        return next(error);
+      } else {
+        if (!req.file) {
+          const error = new Error("You must upload a post picture!");
+          next(error);
+        }
+        let photo = req.file ? req.file.filename : null;
+
+        const savePost = new Post({
+          title,
+          caption,
+          category,
+          tags,
+          body,
+          slug: uuid4(),
+          user,
+          photo: photo,
+        });
+
+        const savedPost = await savePost.save();
+        return res
+          .status(200)
+          .json({ message: "Post uploaded!", data: savedPost });
+      }
+    });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({ message: error.message });
   }
 };

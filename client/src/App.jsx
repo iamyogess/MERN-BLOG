@@ -33,7 +33,7 @@ const App = () => {
           <Route path="admin-dashboard" element={<AdminDashboard />} />
           <Route path="add-post" element={<AddPost />} />
           <Route path="create-category" element={<CreateCategory />} />
-          <Route path="update-post" element={<UpdatePost />} />
+          <Route path="update-post/:slug" element={<UpdatePost />} />
           <Route path="manage-posts" element={<ManagePost />} />
           <Route path="manage-users" element={<ManageUsers />} />
         </Route>

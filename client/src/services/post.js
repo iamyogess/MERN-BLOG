@@ -34,4 +34,24 @@ const getAllPosts = async () => {
   }
 };
 
-export { createPost, getAllPosts };
+const deletePost = async ({ slug, token }) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  try {
+    const { data } = await axios.delete(
+      `http://localhost:5000/api/post/${slug}`,
+      config
+    );
+    return data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.message || error.message || "An error occurred";
+    console.error("Error creating post:", errorMessage);
+    throw new Error(errorMessage);
+  }
+};
+
+export { createPost, getAllPosts, deletePost };

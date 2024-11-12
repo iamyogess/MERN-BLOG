@@ -1,9 +1,10 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { getAllPosts } from "../../../services/post";
+import { Link, useNavigate } from "react-router-dom";
+import { deletePost, getAllPosts } from "../../../services/post";
 import { stables } from "../../../constants";
+import toast from "react-hot-toast";
 
 const ManagePost = () => {
   const userState = useSelector((state) => state.user);
@@ -11,13 +12,37 @@ const ManagePost = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  // Use `queryKey` to properly configure the query
-  const { data, isLoading } = useQuery({
-    queryKey: ["posts"], // Added queryKey as an array
+  const { data, isLoading: isPostsAreLoading } = useQuery({
+    queryKey: ["blog"],
     queryFn: getAllPosts,
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  //delete post
+
+  const { mutate: mutateDeletePost, isLoading: isLoadingDeletePost } =
+    useMutation({
+      mutationFn: ({ slug, token }) => {
+        return deletePost({
+          slug,
+          token,
+        });
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries(["blog"]);
+        toast.success("Blog post deleted!");
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
+
+  const handleDeletePost = ({ slug, token }) => {
+    if (window.confirm("Do you really want to delete this blog post?")) {
+      mutateDeletePost({ slug, token });
+    }
+  };
+
+  if (isPostsAreLoading) return <p>Loading...</p>;
 
   return (
     <section>
@@ -53,7 +78,6 @@ const ManagePost = () => {
                   <img
                     // src="https://via.placeholder.com/80"
                     src={stables.UPLOAD_FOLDER_BASE_URL + item.photo}
-
                     alt="Post"
                     className="w-16 h-16 rounded-md"
                   />
@@ -69,10 +93,23 @@ const ManagePost = () => {
                   {item.category.length > 0 ? item.category : "N/A"}
                 </td>
                 <td className="px-4 py-2 border border-gray-300 text-center">
-                  <button className="bg-blue-500 text-white px-3 py-1 rounded-lg mr-2">
+                  <Link
+                    to={`/admin/update-post/${item?.slug}`}
+                    onClick={() => console.log("hi" + item.slug)}
+                    className="bg-blue-500 text-white px-3 py-1 rounded-lg mr-2"
+                  >
                     Edit
-                  </button>
-                  <button className="bg-red-500 text-white px-3 py-1 rounded-lg">
+                  </Link>
+                  <button
+                    disabled={isLoadingDeletePost}
+                    onClick={() =>
+                      handleDeletePost({
+                        slug: item?.slug,
+                        token: userState.userInfo.token,
+                      })
+                    }
+                    className="bg-red-500 text-white px-3 py-1 rounded-lg"
+                  >
                     Delete
                   </button>
                 </td>

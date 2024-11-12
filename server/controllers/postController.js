@@ -167,31 +167,36 @@ const getAllPosts = async (req, res, next) => {
   try {
     const filter = req.query.searchKeyboard;
     let where = {};
+
+    // Apply search filter if present
     if (filter) {
-      where.title = { $regex: filter, $options: "i" }; //i = case insensitive
+      where.title = { $regex: filter, $options: "i" }; // 'i' for case-insensitive search
     }
-    let query = await Post.find(where);
+
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.limit) || 10;
-    const skip = (size - 1) * pageSize;
-    const total = await Post.find(where).countDocument();
+    const skip = (page - 1) * pageSize;
+
+    // Count total number of documents matching the filter
+    const total = await Post.find(where).countDocuments();
     const pages = Math.ceil(total / pageSize);
 
-    req.headers({
-      "x-filter": filter,
-      "x-totalCount": JSON.stringify(total),
-      "x-currentPage": JSON.stringify(page),
-      "x-pageSize": JSON.stringify(pageSize),
-      "x-totalPageCount": JSON.stringify(pages),
+    // Set response headers
+    res.set({
+      "x-filter": filter || "",
+      "x-totalCount": total.toString(),
+      "x-currentPage": page.toString(),
+      "x-pageSize": pageSize.toString(),
+      "x-totalPageCount": pages.toString(),
     });
 
+    // If requested page exceeds total pages, return an empty array
     if (page > pages) {
-      // const error = new Error("No page found!");
-      // return next(error);
       return res.json([]);
     }
 
-    const result = await query
+    // Fetch results with pagination and sorting
+    const result = await Post.find(where)
       .skip(skip)
       .limit(pageSize)
       .populate([
@@ -200,12 +205,13 @@ const getAllPosts = async (req, res, next) => {
           select: ["avatar", "name", "verified"],
         },
       ])
-      .sort({ updatedAt: "bodyending" });
+      .sort({ updatedAt: -1 });
 
     return res.json(result);
   } catch (error) {
     next(error);
   }
 };
+
 
 export { createPost, getPost, getAllPosts, deletePost, updatePost };

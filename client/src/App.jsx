@@ -25,7 +25,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/explore" element={<ExploreAll />} />
-        <Route path="/singlepage/5" element={<SinglePage />} />
+        <Route path="/single-page/:id" element={<SinglePage />} />
         <Route path="/comment" element={<Comment />} />
         <Route path="/profile" element={<Profile />} />
 

@@ -17,9 +17,21 @@ const createPost = async ({ token, blogData }) => {
   } catch (error) {
     const errorMessage =
       error.response?.data?.message || error.message || "An error occurred";
-    console.error("Error creating post:", errorMessage); // Log the error for debugging
-    throw new Error(errorMessage); // Throw the error for further handling
+    console.error("Error creating post:", errorMessage);
+    throw new Error(errorMessage);
   }
 };
 
-export { createPost };
+const getAllPosts = async () => {
+  try {
+    const { data } = await axios.get(`http://localhost:5000/api/post`);
+    return data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.message || error.message || "An error occurred";
+    console.error("Error creating post:", errorMessage);
+    throw new Error(errorMessage);
+  }
+};
+
+export { createPost, getAllPosts };

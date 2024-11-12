@@ -18,7 +18,6 @@ const ManagePost = () => {
   });
 
   //delete post
-
   const { mutate: mutateDeletePost, isLoading: isLoadingDeletePost } =
     useMutation({
       mutationFn: ({ slug, token }) => {
@@ -71,16 +70,23 @@ const ManagePost = () => {
             </tr>
           </thead>
           <tbody>
-            {console.log(data)}
             {data?.map((item, index) => (
               <tr key={item._id || index} className="text-sm">
                 <td className="px-4 py-2 border border-gray-300">
-                  <img
-                    // src="https://via.placeholder.com/80"
-                    src={stables.UPLOAD_FOLDER_BASE_URL + item.photo}
-                    alt="Post"
-                    className="w-16 h-16 rounded-md"
-                  />
+                  {!item.photo ? (
+                    <img
+                      src="https://via.placeholder.com/80"
+                      alt="Post"
+                      className="w-16 h-16 rounded-md"
+                    />
+                  ) : (
+                    <img
+                      // src="https://via.placeholder.com/80"
+                      src={stables.UPLOAD_FOLDER_BASE_URL + item.photo}
+                      alt="Post"
+                      className="w-16 h-16 rounded-md"
+                    />
+                  )}
                 </td>
                 <td className="px-4 py-2 border border-gray-300">
                   {item.title}
@@ -95,7 +101,6 @@ const ManagePost = () => {
                 <td className="px-4 py-2 border border-gray-300 text-center">
                   <Link
                     to={`/admin/update-post/${item?.slug}`}
-                    onClick={() => console.log("hi" + item.slug)}
                     className="bg-blue-500 text-white px-3 py-1 rounded-lg mr-2"
                   >
                     Edit

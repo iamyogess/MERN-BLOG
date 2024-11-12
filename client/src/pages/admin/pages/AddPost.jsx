@@ -195,7 +195,7 @@ const AddPost = () => {
             loadOptions={promiseOptions}
             defaultValue={category} // Pass category state as default value
             onChangeFunction={(newValue) => {
-              setCategory(newValue.map((item) => item.value)); // Update category state
+              setCategory(newValue ? newValue.value : null); // Update category state
             }}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"
           />

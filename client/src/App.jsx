@@ -38,7 +38,7 @@ const App = () => {
           <Route path="manage-users" element={<ManageUsers />} />
         </Route>
       </Routes>
-      {/* <Toaster /> */}
+      <Toaster />
     </>
   );
 };

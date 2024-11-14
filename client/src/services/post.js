@@ -34,6 +34,18 @@ const getAllPosts = async () => {
   }
 };
 
+const getSinglePost = async (slug) => {
+  try {
+    const { data } = await axios.get(`http://localhost:5000/api/post/${slug}`);
+    return data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.message || error.message || "An error occurred";
+    console.error("Error creating post:", errorMessage);
+    throw new Error(errorMessage);
+  }
+};
+
 const deletePost = async ({ slug, token }) => {
   const config = {
     headers: {
@@ -75,4 +87,4 @@ const updatePost = async ({ slug, token, blogData }) => {
   }
 };
 
-export { createPost, getAllPosts, deletePost, updatePost };
+export { createPost, getAllPosts, deletePost, updatePost, getSinglePost };

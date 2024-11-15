@@ -5,6 +5,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getSinglePost, updatePost } from "../../../services/post";
 import { HiOutlineCamera } from "react-icons/hi";
 import toast from "react-hot-toast";
+import { promiseOptions } from "../../../utils/multiSelectTagUtils";
+import CreatableSelect from "react-select/creatable";
+import MultiSelectTagDropdown from "../components/MultiSelectTagDropdown";
+import stables from "./../../../constants/stables";
 
 const UpdatePost = () => {
   const { slug } = useParams();
@@ -58,8 +62,8 @@ const UpdatePost = () => {
         }
 
         setTitle(fetchedData.title);
-        setCaption(fetchedData.title);
-        setPhoto(fetchData.photo);
+        setCaption(fetchedData.caption);
+        setPhoto(fetchedData.photo);
         setBody(fetchedData.body);
       } catch (error) {
         toast.error("Error fetching data!");
@@ -107,7 +111,7 @@ const UpdatePost = () => {
     updatedData.append("caption", caption);
     updatedData.append("body", body);
     updatedData.append("category", category);
-    updatedData.append("tags", tags.split(", "));
+    updatedData.append("tags", tags);
 
     mutation.mutate({
       updatedData,
@@ -136,7 +140,9 @@ const UpdatePost = () => {
             {photo ? (
               <img
                 src={
-                  typeof photo === "string" ? photo : URL.createObjectURL(photo)
+                  photo
+                    ? stables.UPLOAD_FOLDER_BASE_URL + photo
+                    : URL.createObjectURL(photo)
                 }
                 alt={title}
               />
@@ -146,9 +152,10 @@ const UpdatePost = () => {
               </div>
             )}
             <button
+              disabled={!photo}
               type="button"
               onClick={handleDeleteImage}
-              className="px-6 py-3 my-2 w-full bg-red-500 border-2 text-white rounded-lg border-red-500 hover:bg-transparent hover:text-red-500 transition duration-300"
+              className="px-6 py-3 my-2 w-full bg-red-500 border-2 text-white rounded-lg border-red-500 hover:bg-transparent hover:text-red-500 transition duration-300 disabled:cursor-not-allowed"
             >
               Remove Image
             </button>
@@ -216,6 +223,14 @@ const UpdatePost = () => {
             aria-label="Select Category"
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"
           /> */}
+          <MultiSelectTagDropdown
+            loadOptions={promiseOptions}
+            defaultValue={category} // Pass category state as default value
+            onChangeFunction={(newValue) => {
+              setCategory(newValue ? newValue.value : null); // Update category state
+            }}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+          />
         </div>
         <div className="flex items-start flex-col w-full max-w-xs">
           <label
@@ -234,6 +249,14 @@ const UpdatePost = () => {
             aria-label="Enter Tags"
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"
           /> */}
+
+          <CreatableSelect
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+            id="tags"
+            defaultValue={tags}
+            isMulti
+            onChange={(newValue) => setTags(newValue.map((item) => item.value))}
+          />
         </div>
         <div className="flex items-start flex-col w-full max-w-xs">
           <label

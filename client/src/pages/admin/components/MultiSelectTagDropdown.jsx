@@ -2,7 +2,7 @@ import React from "react";
 import AsyncSelect from "react-select/async";
 
 const MultiSelectTagDropdown = ({
-  defaultValue = [],
+  defaultValue,
   loadOptions,
   onChangeFunction,
   className,

@@ -6,7 +6,7 @@ import stables from "../constants/stables";
 const BlogCard = ({ post }) => {
   return (
     <div className="group flex flex-col gap-y-2 p-4 border border-transparent hover:border-black transition-all duration-300 rounded-md">
-      <Link to={`/singlepage/${post.slug}`}>
+      <Link to={`/single-page/${post.slug}`}>
         <img
           src={
             post.photo
@@ -18,7 +18,7 @@ const BlogCard = ({ post }) => {
         />
       </Link>
       <div className="flex justify-between items-center">
-        <Link to={`/singlepage/${post.slug}`}>
+        <Link to={`/single-page/${post.slug}`}>
           <h1 className="text-xl font-bold md:text-2xl lg:text-3xl transition-colors duration-300 group-hover:text-orange-400">
             {post.title}
           </h1>

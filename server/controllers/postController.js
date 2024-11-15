@@ -204,6 +204,10 @@ const getAllPosts = async (req, res, next) => {
           path: "user",
           select: ["avatar", "name", "verified"],
         },
+        {
+          path: "category",
+          select: ["title"],
+        },
       ])
       .sort({ updatedAt: -1 });
 

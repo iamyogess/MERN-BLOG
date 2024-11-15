@@ -1,9 +1,19 @@
 import React from "react";
 import MainLayout from "../components/MainLayout";
 import BlogCard from "../components/BlogCard";
+import { useQuery } from "@tanstack/react-query";
+import { getAllPosts } from "../services/post";
 
 const ExploreAll = () => {
-  const count = [1, 2, 3, 4, 5, 6, 7, 8];
+  const { data: blogCardData, isLoading: blogCardDataIsLoading } = useQuery({
+    queryFn: () => getAllPosts(),
+
+    queryKey: ["blog"],
+  });
+
+  if (blogCardDataIsLoading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <MainLayout>
@@ -13,9 +23,9 @@ const ExploreAll = () => {
             Explore More
           </h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-5">
-            {count.map((item, index) => {
-              return <BlogCard key={index} />;
-            })}
+            {blogCardData?.map((item) => (
+              <BlogCard key={item._id} post={item} />
+            ))}
           </div>
         </div>
       </section>

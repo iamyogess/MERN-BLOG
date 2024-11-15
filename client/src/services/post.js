@@ -34,7 +34,7 @@ const getAllPosts = async () => {
   }
 };
 
-const getSinglePost = async (slug) => {
+const getSinglePost = async ({slug}) => {
   try {
     const { data } = await axios.get(`http://localhost:5000/api/post/${slug}`);
     return data;

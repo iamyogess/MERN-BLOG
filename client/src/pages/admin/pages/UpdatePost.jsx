@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
@@ -19,23 +19,55 @@ const UpdatePost = () => {
   const [tags, setTags] = useState("");
   const [photo, setPhoto] = useState(null);
 
-  const { data, isLoading } = useQuery({
-    queryFn: () => getSinglePost(slug),
-    queryKey: ["blog", slug],
-    onSuccess: (data) => {
-      console.log("Fetched Data:", data);
-      setTitle(data.title);
-      setCaption(data.caption);
-      setBody(data.body);
-      setPhoto(data.photo);
-      setTags(data.tags.join(", ")); // Convert array to comma-separated string for input
-      setCategory(data.category);
-    },
-    onError: (error) => {
-      console.log("Error fetching data:", error); 
-    },
-    refetchOnWindowFocus: false,
-  });
+  //somehow onSuccess did not trigger
+  // const { data, isLoading, isError, error } = useQuery({
+  //   queryFn: () => getSinglePost({slug}),
+  //   queryKey: ["blogg"],
+  //   onSuccess: (data) => {
+  //     try {
+  //       console.log("Fetched Data:", data);
+  //       if (!data) {
+  //         console.error("No data returned");
+  //       }
+  //       setTitle(data.post.title);
+  //       setCaption(data.post.caption);
+  //       setBody(data.post.body);
+  //       setPhoto(data.post.photo);
+  //       setTags(data.post.tags.join(", "));
+  //       setCategory(data.post.category);
+  //     } catch (error) {
+  //       console.error("Error in onSuccess:", error);
+  //     }
+  //   },
+  //   onError: (error) => {
+  //     console.error("Error fetching data:", error);
+  //   },
+  //   refetchOnWindowFocus: false,
+  // });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getSinglePost({ slug });
+        const fetchedData = response.post;
+        console.log(fetchedData);
+
+        if (!fetchedData) {
+          console.error("No data returned");
+          return;
+        }
+
+        setTitle(fetchedData.title);
+        setCaption(fetchedData.title);
+        setPhoto(fetchData.photo);
+        setBody(fetchedData.body);
+      } catch (error) {
+        toast.error("Error fetching data!");
+        console.log("Error fetching data: ", error);
+      }
+    };
+    fetchData();
+  }, [slug]);
 
   const mutation = useMutation({
     mutationFn: ({ updatedData, slug, token }) =>
@@ -84,14 +116,13 @@ const UpdatePost = () => {
     });
   };
 
-  if (isLoading) return <p>Loading...</p>;
+  // if (isLoading) return <p>Loading...</p>;
 
   return (
     <section className="w-full max-h-full container mx-auto px-4">
       <h1 className="text-center font-extrabold text-2xl lg:text-4xl py-2">
         Update Post
       </h1>
-      {/* {console.log(data)} */}
       <form
         onSubmit={handleUpdate}
         encType="multipart/form-data"
@@ -138,6 +169,7 @@ const UpdatePost = () => {
           >
             Title
           </label>
+          {console.log(title)}
           <input
             type="text"
             name="title"
@@ -167,14 +199,14 @@ const UpdatePost = () => {
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"
           />
         </div>
-        {/* <div className="flex items-start flex-col w-full max-w-xs">
+        <div className="flex items-start flex-col w-full max-w-xs">
           <label
             htmlFor="category"
             className="py-1 text-sm md:text-lg text-gray-600"
           >
             Category
           </label>
-          <input
+          {/* <input
             type="text"
             name="category"
             id="category"
@@ -183,7 +215,7 @@ const UpdatePost = () => {
             placeholder="Select Category"
             aria-label="Select Category"
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"
-          />
+          /> */}
         </div>
         <div className="flex items-start flex-col w-full max-w-xs">
           <label
@@ -192,7 +224,7 @@ const UpdatePost = () => {
           >
             Tags
           </label>
-          <input
+          {/* <input
             type="text"
             name="tags"
             id="tags"
@@ -201,8 +233,8 @@ const UpdatePost = () => {
             placeholder="Enter Tags"
             aria-label="Enter Tags"
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"
-          />
-        </div> */}
+          /> */}
+        </div>
         <div className="flex items-start flex-col w-full max-w-xs">
           <label
             htmlFor="description"
@@ -224,7 +256,7 @@ const UpdatePost = () => {
         <button
           type="submit"
           aria-label="Create Post"
-          className="px-6 py-3 bg-black text-white rounded-lg border-2 hover:border-black hover:bg-transparent hover:text-black transition duration-300"
+          className="px-6 py-3 w-full bg-black text-white rounded-lg border-2 hover:border-black hover:bg-transparent hover:text-black transition duration-300"
         >
           UPDATE
         </button>

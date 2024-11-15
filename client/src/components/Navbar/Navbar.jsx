@@ -5,6 +5,7 @@ import { CgClose } from "react-icons/cg";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import logout from "../../store/action/user";
+import stables from "./../../constants/stables";
 
 const Navbar = () => {
   const userState = useSelector((state) => state.user);
@@ -108,7 +109,18 @@ const Navbar = () => {
                 onClick={toggleSmallMenu}
                 className="cursor-pointer flex gap-x-2"
               >
-                <FaRegUserCircle className="text-2xl text-center mb-1" />
+                {userState?.userInfo && userState.userInfo.avatar ? (
+                  <img
+                    src={
+                      stables.UPLOAD_FOLDER_BASE_URL + userState.userInfo.avatar
+                    }
+                    className="h-8 w-8 p-[2px] border-2 border-blue-500 rounded-full"
+                    alt="profile"
+                  />
+                ) : (
+                  <FaRegUserCircle className="text-2xl text-center mb-1" />
+                )}
+
                 <span className="hidden md:block text-lg text-center">
                   {userState?.userInfo?.name?.split(" ")[0]}
                 </span>

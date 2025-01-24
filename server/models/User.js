@@ -11,10 +11,12 @@ const userSchema = new Schema(
     verified: { type: Boolean, default: false },
     verificationCode: { type: String, default: "" },
     admin: { type: Boolean, default: false },
+    bloggerRequestStatus: { type: Boolean, default: false },
+    blogger: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
- 
+
 // Hash password before saving
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {

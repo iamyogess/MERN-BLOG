@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
@@ -16,6 +16,8 @@ import AdminDashboard from "./pages/admin/pages/AdminDashboard";
 import CreateCategory from "./pages/admin/pages/CreateCategory";
 import Comment from "./components/Comment/Comment";
 import Profile from "./pages/Profile";
+import BloggerRequest from "./pages/admin/pages/BloggerRequest";
+import VerifiedBloggers from "./pages/admin/pages/VerifiedBloggers";
 
 const App = () => {
   return (
@@ -36,6 +38,8 @@ const App = () => {
           <Route path="update-post/:slug" element={<UpdatePost />} />
           <Route path="manage-posts" element={<ManagePost />} />
           <Route path="manage-users" element={<ManageUsers />} />
+          <Route path="blogger-request" element={<BloggerRequest />} />
+          <Route path="verified-bloggers" element={<VerifiedBloggers />} />
         </Route>
       </Routes>
       <Toaster />

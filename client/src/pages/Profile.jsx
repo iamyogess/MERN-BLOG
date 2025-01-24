@@ -1,10 +1,14 @@
-import React, { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import MainLayout from "../components/MainLayout";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getUserProfile, updateProfile } from "../services/user";
+import {
+  getUserProfile,
+  sendBloggerRequest,
+  updateProfile,
+} from "../services/user";
 import ProfilePicture from "../components/ProfilePicture";
 import { userAction } from "../store/reducers/userReducer";
 import toast from "react-hot-toast";
@@ -16,11 +20,7 @@ const Profile = () => {
   const queryClient = useQueryClient();
 
   //fetch data
-  const {
-    data: profileData,
-    isLoading: profileIsLoading,
-    error: profileError,
-  } = useQuery({
+  const { data: profileData, isLoading: profileIsLoading } = useQuery({
     queryFn: () => {
       return getUserProfile({ token: userState.userInfo.token });
     },
@@ -80,12 +80,55 @@ const Profile = () => {
     mutate({ name, email, password });
   };
 
+  const { mutate: bloggerRequest } = useMutation({
+    mutationFn: () => {
+      console.log("Triggering mutation");
+      return sendBloggerRequest({ token: userState.userInfo.token });
+    },
+    onSuccess: () => {
+      console.log("Request sent successfully");
+      toast.success("Blogger permission requested!");
+    },
+    onError: (err) => {
+      console.error("Mutation error:", err.message);
+      toast.error(err.message);
+    },
+  });
+
+  const bloggerRequestSubmitHandler = () => {
+    if (window.confirm("Do you really want to be a blogger?")) {
+      console.log("Submitting request...");
+      bloggerRequest();
+    }
+  };
+
   return (
     <MainLayout>
-      <section className="w-full container mx-auto mt-20 py-5">
+      <section className="w-full container mx-auto mt-20 py-5 flex flex-col md:flex-row justify-between items-center gap-3">
         <div className="w-full max-w-sm mx-auto">
+          <h1 className="text-xl font-bold uppercase">
+            Send Request to become a blogger
+          </h1>
+          <form
+            action=""
+            onSubmit={(e) => {
+              e.preventDefault(); // Prevent default form submission behavior
+              bloggerRequestSubmitHandler();
+            }}
+            className="flex flex-col gap-y-3 mb-10"
+          >
+            <button
+              type="submit"
+              className="px-10 py-4 mt-3 bg-green-500 text-white w-full rounded-lg border-2 hover:border-green-500 hover:bg-transparent hover:text-green-500 transition duration-300 disabled:opacity-70"
+            >
+              Send Blogger Request
+            </button>
+          </form>
+
           <ProfilePicture avatar={profileData?.avatar} />
+
           <form action="" onSubmit={handleSubmit(submitHandler)}>
+            <h1 className="text-xl font-bold uppercase">Update Your Profile</h1>
             <div className="flex flex-col mb-6 w-full">
               <label
                 htmlFor="name"

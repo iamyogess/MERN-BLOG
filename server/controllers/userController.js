@@ -180,10 +180,144 @@ const uploadProfilePicture = async (req, res, next) => {
   }
 };
 
+const getBloggerRequest = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+    user.bloggerRequestStatus = true;
+    await user.save();
+    console.log("Blogger Request sent successfully!");
+    return res
+      .status(200)
+      .json({ message: "Blogger Request sent successfully!" });
+  } catch (error) {
+    next(error);
+  }
+};
+const bloggerRequest = async (req, res, next) => {
+  try {
+    const bloggers = await User.find({ bloggerRequestStatus: true });
+    console.log("Blogger Request sent successfully!");
+    return res.status(200).json({ message: "Blogger Request", bloggers });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+const approveBloggerRequest = async (req, res, next) => {
+  try {
+    const userId = req.params.userId; // Ensure you're passing the userId as a parameter
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    if (!user.bloggerRequestStatus) {
+      return res.status(400).json({ message: "No pending blogger request!" });
+    }
+
+    // Update user properties
+    user.blogger = true;
+    user.bloggerRequestStatus = false;
+
+    // Save the user changes
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ message: "Blogger request approved successfully!" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getVerifiedBloggers = async (req, res, next) => {
+  try {
+    // Fetch users with the "blogger: true" condition
+    const bloggers = await User.find({ blogger: true }).select("-password");
+
+    // Return success response
+    return res.status(200).json({
+      message: "Verified bloggers fetched successfully!",
+      bloggers,
+    });
+  } catch (error) {
+    // Pass errors to the next middleware
+    next(error);
+  }
+};
+
+
+const rejectBloggerRequest = async (req, res, next) => {
+  try {
+    const userId = req.params.userId; // Assuming userId is passed as a parameter
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    if (!user.bloggerRequestStatus) {
+      return res
+        .status(400)
+        .json({ message: "No pending blogger request to reject!" });
+    }
+
+    // Update user properties
+    user.bloggerRequestStatus = false;
+
+    // Save the user changes
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ message: "Blogger request rejected successfully!" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const revokeBloggerPermission = async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    if (!user.blogger) {
+      return res
+        .status(400)
+        .json({ message: "User is not a blogger, no permissions to revoke!" });
+    }
+
+    user.blogger = false;
+    await user.save();
+
+    return res.status(200).json({
+      message: "Blogger permission revoked successfully!",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   registerUser,
   loginUser,
   getUserProfile,
   updateProfile,
   uploadProfilePicture,
+  approveBloggerRequest,
+  getVerifiedBloggers,
+  getBloggerRequest,
+  rejectBloggerRequest,
+  revokeBloggerPermission,
+  bloggerRequest
 };

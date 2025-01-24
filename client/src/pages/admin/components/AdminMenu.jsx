@@ -24,11 +24,6 @@ const AdminMenu = () => {
       link: "create-category",
     },
     {
-      icon: <GrUpdate className="h-6 w-auto" />,
-      label: "Update Post",
-      link: "update-post",
-    },
-    {
       icon: <BiSolidCollection className="h-6 w-auto" />,
       label: "Manage Posts",
       link: "manage-posts",
@@ -37,6 +32,16 @@ const AdminMenu = () => {
       icon: <FaUsersCog className="h-6 w-auto" />,
       label: "Manage Users",
       link: "manage-users",
+    },
+    {
+      icon: <FaUsersCog className="h-6 w-auto" />,
+      label: "Blogger Requests",
+      link: "blogger-request",
+    },
+    {
+      icon: <FaUsersCog className="h-6 w-auto" />,
+      label: "Verified Bloggers",
+      link: "verified-bloggers",
     },
   ];
 

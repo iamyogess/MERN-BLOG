@@ -1,0 +1,15 @@
+meta {
+  name: requests
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:5000/api/user/get-bloggers
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MWI5YmQ2N2FmM2QxMjM1YTNiNWQ0MCIsImlhdCI6MTczNzczMzU2OCwiZXhwIjoxNzQwMzI1NTY4fQ.AR_Ss9Q3XrHgJ9i6fbXHufu19b0Ncp1zuvU7ewS4K6Q
+}

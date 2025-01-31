@@ -61,7 +61,7 @@ const deletePost = async ({ slug, token }) => {
   } catch (error) {
     const errorMessage =
       error.response?.data?.message || error.message || "An error occurred";
-    console.error("Error creating post:", errorMessage);
+    console.error("Error deleting post:", errorMessage);
     throw new Error(errorMessage);
   }
 };
@@ -82,7 +82,7 @@ const updatePost = async ({ slug, token, blogData }) => {
   } catch (error) {
     const errorMessage =
       error.response?.data?.message || error.message || "An error occurred";
-    console.error("Error creating post:", errorMessage);
+    console.error("Error updating post:", errorMessage);
     throw new Error(errorMessage);
   }
 };

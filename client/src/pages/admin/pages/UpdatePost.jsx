@@ -132,7 +132,7 @@ const UpdatePost = () => {
         encType="multipart/form-data"
         className="flex justify-center items-center flex-col h-full mt-5 gap-6"
       >
-        <div className="flex items-start flex-col w-full max-w-xs">
+        <div className="flex items-start flex-col w-full max-w-md">
           <label
             htmlFor="image"
             className="py-1 text-sm md:text-lg text-gray-600"
@@ -169,7 +169,7 @@ const UpdatePost = () => {
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"
           />
         </div>
-        <div className="flex items-start flex-col w-full max-w-xs">
+        <div className="flex items-start flex-col w-full max-w-md">
           <label
             htmlFor="title"
             className="py-1 text-sm md:text-lg text-gray-600"
@@ -188,7 +188,7 @@ const UpdatePost = () => {
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"
           />
         </div>
-        <div className="flex items-start flex-col w-full max-w-xs">
+        <div className="flex items-start flex-col w-full max-w-md">
           <label
             htmlFor="caption"
             className="py-1 text-sm md:text-lg text-gray-600"
@@ -206,7 +206,7 @@ const UpdatePost = () => {
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"
           />
         </div>
-        <div className="flex items-start flex-col w-full max-w-xs">
+        <div className="flex items-start flex-col w-full max-w-md">
           <label
             htmlFor="category"
             className="py-1 text-sm md:text-lg text-gray-600"
@@ -232,7 +232,7 @@ const UpdatePost = () => {
             className="w-full px-4 py-3 border border-gray-300 rounded-lg"
           />
         </div>
-        <div className="flex items-start flex-col w-full max-w-xs">
+        <div className="flex items-start flex-col w-full max-w-md">
           <label
             htmlFor="tags"
             className="py-1 text-sm md:text-lg text-gray-600"
@@ -258,7 +258,7 @@ const UpdatePost = () => {
             onChange={(newValue) => setTags(newValue.map((item) => item.value))}
           />
         </div>
-        <div className="flex items-start flex-col w-full max-w-xs">
+        <div className="flex items-start flex-col w-full max-w-md">
           <label
             htmlFor="description"
             className="py-1 text-sm md:text-lg text-gray-600"
@@ -279,7 +279,7 @@ const UpdatePost = () => {
         <button
           type="submit"
           aria-label="Create Post"
-          className="px-6 py-3 w-full bg-black text-white rounded-lg border-2 hover:border-black hover:bg-transparent hover:text-black transition duration-300"
+          className="px-6 py-3 w-[30vw] bg-green-500 text-white rounded-lg border-2 hover:border-white hover:bg-green-400   transition duration-300"
         >
           UPDATE
         </button>

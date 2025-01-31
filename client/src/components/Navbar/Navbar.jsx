@@ -8,6 +8,13 @@ import logout from "../../store/action/user";
 import stables from "./../../constants/stables";
 
 const Navbar = () => {
+  const navlinks = [
+    { link: "/", name: "Home" },
+    { link: "/about", name: "About" },
+    { link: "/services", name: "Services" },
+    { link: "/contact", name: "Contact" },
+  ];
+
   const userState = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
@@ -38,51 +45,55 @@ const Navbar = () => {
   const handleLogout = () => {
     dispatch(logout());
   };
+  // Function to check if the link is active
+  const isActive = (path) => location.pathname === path;
 
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-10 transition-all duration-300 ease-in-out bg-white shadow-md`}
     >
-      <div className="container mx-auto px-4 flex justify-between items-center py-6">
+      <div className="container mx-auto px-4 flex justify-between items-center  ">
         {/* LOGO */}
         <div className={`text-2xl font-bold cursor-pointer`}>
-          <Link to="/">LOGO</Link>
+          <Link to="/">
+            <img src="/logo.png" alt="logo" className="w-16 h-16" />
+          </Link>
         </div>
 
         {/* DESKTOP MENU */}
         <ul className="hidden md:flex gap-x-5 text-lg">
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/about">About</Link>
-          </li>
-          <li>
-            <Link to="/services">Services</Link>
-          </li>
-          <li>
-            <Link to="/contact">Contact</Link>
-          </li>
+          {navlinks.map((nav) => (
+            <li key={nav.link}>
+              <Link
+                to={nav.link}
+                className={`${
+                  isActive(nav.link) ? "text-orange-400 font-semibold" : ""
+                }`}
+              >
+                {nav.name}
+              </Link>
+            </li>
+          ))}
         </ul>
 
         {/* MOBILE MENU */}
         <ul
-          className={`md:hidden flex-col gap-y-6 absolute top-0 left-0 w-full h-screen bg-white p-10 mt-20 transition-transform duration-300 ease-in-out ${
+          className={`md:hidden flex-col gap-y-6 absolute top-0 left-0 w-full h-screen bg-white p-10 mt-16 transition-transform duration-300 ease-in-out ${
             openMenu ? "translate-x-0" : "-translate-x-full"
           } text-black`}
         >
-          <li className="text-2xl cursor-pointer">
-            <Link to="/">Home</Link>
-          </li>
-          <li className="text-2xl cursor-pointer">
-            <Link to="/about">About</Link>
-          </li>
-          <li className="text-2xl cursor-pointer">
-            <Link to="/services">Services</Link>
-          </li>
-          <li className="text-2xl cursor-pointer">
-            <Link to="/contact">Contact</Link>
-          </li>
+          {navlinks.map((nav) => (
+            <li key={nav.link} className="text-2xl cursor-pointer">
+              <Link
+                to={nav.link}
+                className={`${
+                  isActive(nav.link) ? "text-orange-400 font-semibold" : ""
+                }`}
+              >
+                {nav.name}
+              </Link>
+            </li>
+          ))}
         </ul>
 
         {/* PROFILE */}

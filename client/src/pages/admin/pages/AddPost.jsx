@@ -241,7 +241,7 @@ const AddPost = () => {
         <button
           type="submit"
           aria-label="Create Post"
-          className="px-6 py-3 bg-black text-white rounded-lg border-2 hover:border-black hover:bg-transparent hover:text-black transition duration-300"
+          className="px-6 py-3 w-[22vw] bg-sky-500 text-white rounded-lg border-2 hover:border-white hover:bg-sky-400   transition duration-300"
         >
           {isLoadingPostDetails ? "Submitting..." : "CREATE"}
         </button>

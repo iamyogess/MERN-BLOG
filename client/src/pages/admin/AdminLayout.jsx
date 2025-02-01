@@ -16,9 +16,9 @@ const AdminLayout = () => {
       {/* Header */}
       <Link
         to="/"
-        className="absolute top-0 left-0 z-10 text-center text-black text-2xl font-bold p-8"
+        className="absolute top-0 left-5 z-10 text-center text-black text-2xl font-bold "
       >
-        LOGO
+        <img src="/logo.png" alt="logo" className="w-16 h-16 " />
       </Link>
       <div className="md:hidden w-full absolute top-0 right-0 p-7 flex justify-end items-center">
         {openAdminMenu ? (

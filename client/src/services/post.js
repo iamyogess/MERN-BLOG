@@ -9,7 +9,7 @@ const createPost = async ({ token, blogData }) => {
 
   try {
     const { data } = await axios.post(
-      `http://localhost:5000/api/post/create-post`,
+      `http://localhost:8000/api/post/create-post`,
       blogData,
       config
     );
@@ -24,7 +24,7 @@ const createPost = async ({ token, blogData }) => {
 
 const getAllPosts = async () => {
   try {
-    const { data } = await axios.get(`http://localhost:5000/api/post`);
+    const { data } = await axios.get(`http://localhost:8000/api/post`);
     return data;
   } catch (error) {
     const errorMessage =
@@ -36,7 +36,7 @@ const getAllPosts = async () => {
 
 const getSinglePost = async ({ slug }) => {
   try {
-    const { data } = await axios.get(`http://localhost:5000/api/post/${slug}`);
+    const { data } = await axios.get(`http://localhost:8000/api/post/${slug}`);
     return data;
   } catch (error) {
     const errorMessage =
@@ -54,7 +54,7 @@ const deletePost = async ({ slug, token }) => {
   };
   try {
     const { data } = await axios.delete(
-      `http://localhost:5000/api/post/${slug}`,
+      `http://localhost:8000/api/post/${slug}`,
       config
     );
     return data;
@@ -74,7 +74,7 @@ const updatePost = async ({ slug, token, blogData }) => {
   };
   try {
     const { data } = await axios.put(
-      `http://localhost:5000/api/post/${slug}`,
+      `http://localhost:8000/api/post/${slug}`,
       blogData,
       config
     );

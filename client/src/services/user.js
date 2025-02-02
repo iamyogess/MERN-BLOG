@@ -1,15 +1,20 @@
 import axios from "axios";
 
+const api = axios.create({
+  baseURL: "http://localhost:8000/api",
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 const signup = async ({ name, email, password }) => {
   try {
-    const { data } = await axios.post(
-      "http://127.0.0.1:5000/api/user/register",
-      {
-        name,
-        email,
-        password,
-      }
-    );
+    const { data } = await api.post("/user/register", {
+      name,
+      email,
+      password,
+    });
     return data;
   } catch (error) {
     if (error.response && error.response.data.message) {
@@ -21,7 +26,7 @@ const signup = async ({ name, email, password }) => {
 
 const login = async ({ email, password }) => {
   try {
-    const { data } = await axios.post("http://127.0.0.1:5000/api/user/login", {
+    const { data } = await api.post("/user/login", {
       email,
       password,
     });
@@ -42,7 +47,7 @@ const getUserProfile = async ({ token }) => {
   };
   try {
     const { data } = await axios.get(
-      "http://127.0.0.1:5000/api/user/profile",
+      "http://127.0.0.1:8000/api/user/profile",
       config
     );
     return data;
@@ -62,7 +67,7 @@ const updateProfile = async ({ token, userData }) => {
   };
   try {
     const { data } = await axios.put(
-      "http://127.0.0.1:5000/api/user/updateProfile",
+      "http://127.0.0.1:8000/api/user/updateProfile",
       userData,
       config
     );
@@ -84,7 +89,7 @@ const uploadProfilePicture = async ({ token, formData }) => {
   };
   try {
     const { data } = await axios.put(
-      "http://127.0.0.1:5000/api/user/uploadProfilePicture",
+      "http://127.0.0.1:8000/api/user/uploadProfilePicture",
       formData,
       config
     );
@@ -107,7 +112,7 @@ const sendBloggerRequest = async ({ token }) => {
   try {
     console.log("Sending request with config:", config);
     const { data } = await axios.post(
-      "http://127.0.0.1:5000/api/user/blogger-request",
+      "http://127.0.0.1:8000/api/user/blogger-request",
       {}, // Use an empty object as the body
       config
     );
@@ -122,7 +127,6 @@ const sendBloggerRequest = async ({ token }) => {
   }
 };
 
-
 const getBloggerRequests = async ({ token }) => {
   const config = {
     headers: {
@@ -131,7 +135,7 @@ const getBloggerRequests = async ({ token }) => {
   };
   try {
     const { data } = await axios.get(
-      'http://127.0.0.1:5000/api/user/get-request',
+      "http://127.0.0.1:8000/api/user/get-request",
       config
     );
     return data;
@@ -143,7 +147,7 @@ const getBloggerRequests = async ({ token }) => {
   }
 };
 
- const rejectBloggerRequests = async ({ token, bloggerId }) => {
+const rejectBloggerRequests = async ({ token, bloggerId }) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -151,7 +155,7 @@ const getBloggerRequests = async ({ token }) => {
   };
   try {
     const { data } = await axios.put(
-      `http://127.0.0.1:5000/api/user/reject-blogger/${bloggerId}`,
+      `http://127.0.0.1:8000/api/user/reject-blogger/${bloggerId}`,
       {}, // No request body, but still required for PUT
       config
     );
@@ -164,7 +168,7 @@ const getBloggerRequests = async ({ token }) => {
   }
 };
 
- const approveBloggerRequests = async ({ token, bloggerId }) => {
+const approveBloggerRequests = async ({ token, bloggerId }) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -172,7 +176,7 @@ const getBloggerRequests = async ({ token }) => {
   };
   try {
     const { data } = await axios.put(
-      `http://127.0.0.1:5000/api/user/approve-blogger/${bloggerId}`,
+      `http://127.0.0.1:8000/api/user/approve-blogger/${bloggerId}`,
       {}, // No request body, but still required for PUT
       config
     );
@@ -182,7 +186,7 @@ const getBloggerRequests = async ({ token }) => {
       throw new Error(error.response.data.message);
     }
     throw new Error(error.message);
-  }//fixxxx
+  } //fixxxx
 };
 
 const getVerifiedBloggerRequests = async ({ token }) => {
@@ -194,7 +198,7 @@ const getVerifiedBloggerRequests = async ({ token }) => {
 
   try {
     const { data } = await axios.get(
-      "http://127.0.0.1:5000/api/user/get-bloggers",
+      "http://127.0.0.1:8000/api/user/get-bloggers",
       config
     );
     return data.bloggers; // Assuming `data.bloggers` contains the array of bloggers
@@ -206,6 +210,15 @@ const getVerifiedBloggerRequests = async ({ token }) => {
   }
 };
 
-
-
-export { signup, login, getUserProfile, updateProfile, uploadProfilePicture,sendBloggerRequest,getBloggerRequests,rejectBloggerRequests,approveBloggerRequests,getVerifiedBloggerRequests };
+export {
+  signup,
+  login,
+  getUserProfile,
+  updateProfile,
+  uploadProfilePicture,
+  sendBloggerRequest,
+  getBloggerRequests,
+  rejectBloggerRequests,
+  approveBloggerRequests,
+  getVerifiedBloggerRequests,
+};

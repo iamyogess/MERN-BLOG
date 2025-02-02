@@ -13,6 +13,7 @@ import userRoutes from "./routes/userRoute.js";
 import postRoutes from "./routes/postRoute.js";
 import categoryRoutes from "./routes/postCategoryRoute.js";
 import commentRoutes from "./routes/commentRoute.js";
+import cookieParser from "cookie-parser";
 
 //.env
 dotenv.config();
@@ -23,9 +24,15 @@ const app = express();
 connectDB();
 
 //middlewares
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors());
+app.use(cookieParser())
 
 //define routes
 app.use("/api/user", userRoutes);
@@ -46,7 +53,7 @@ app.use(invalidPathHandler);
 app.use(errorResponseHandler);
 
 //port
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8000;
 
 //listening to the server
 app.listen(PORT, () => {

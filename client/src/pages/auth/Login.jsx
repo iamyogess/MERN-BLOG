@@ -5,15 +5,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { useMutation } from "@tanstack/react-query";
 import { userAction } from "../../store/reducers/userReducer";
 import toast from "react-hot-toast";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { login } from "../../services/user";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userState = useSelector((state) => state.user);
+  const [isLocked, setIsLocked] = useState(false);
+  const [lockTime, setLockTime] = useState(null);
 
-  const { mutate, isLoading } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: ({ email, password }) => {
       return login({ email, password });
     },
@@ -23,7 +25,18 @@ const Login = () => {
     },
     onError: (error) => {
       console.log(error);
-      toast.error(error.message);
+      // Check for lock status in error response
+      if (error.response?.status === 403) {
+        setIsLocked(true);
+        // If time information is provided in the error message
+        if (error.response.data?.message?.includes("minutes")) {
+          const minutes = parseInt(error.response.data.message.match(/\d+/)[0]);
+          setLockTime(Date.now() + minutes * 60 * 1000);
+        } else {
+          setLockTime(Date.now() + 15 * 60 * 1000); // Default 15 minutes
+        }
+      }
+      toast.error(error.response?.data?.message || error.message);
     },
   });
 
@@ -31,12 +44,28 @@ const Login = () => {
     if (userState.userInfo) {
       navigate("/");
     }
-  }, [navigate, userState.userInfo]);
+
+    // Check and update lock status
+    if (lockTime && Date.now() >= lockTime) {
+      setIsLocked(false);
+      setLockTime(null);
+    }
+
+    // Set up interval to check lock status
+    const interval = setInterval(() => {
+      if (lockTime && Date.now() >= lockTime) {
+        setIsLocked(false);
+        setLockTime(null);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [navigate, userState.userInfo, lockTime]);
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm({
     defaultValues: {
       email: "",
@@ -46,6 +75,11 @@ const Login = () => {
   });
 
   const submitHandler = (data) => {
+    if (isLocked) {
+      const timeLeft = Math.ceil((lockTime - Date.now()) / 1000 / 60);
+      toast.error(`Account is locked. Please try again after ${timeLeft} minutes.`);
+      return;
+    }
     const { email, password } = data;
     mutate({ email, password });
   };
@@ -55,6 +89,12 @@ const Login = () => {
       <section className="mt-20 container mx-auto pt-10">
         <div className="flex items-center justify-center flex-col">
           <h1 className="text-4xl font-bold mb-6">Login</h1>
+          {isLocked && lockTime && (
+            <div className="mb-4 text-red-500 text-sm">
+              Account is locked. Please try again in{" "}
+              {Math.ceil((lockTime - Date.now()) / 1000 / 60)} minutes.
+            </div>
+          )}
           <form action="" onSubmit={handleSubmit(submitHandler)}>
             {/* EMAIL  */}
             <div className="flex justify-center items-start flex-col gap-y-2">
@@ -114,13 +154,18 @@ const Login = () => {
               )}
             </div>
 
-            <button className="px-10 py-4 mt-3 bg-black text-white w-full rounded-lg border-2 hover:border-black hover:bg-transparent hover:text-black transition duration-300">
-              LOGIN
+            <button 
+              disabled={isLocked}
+              className={`px-10 py-4 mt-3 bg-black text-white w-full rounded-lg border-2 hover:border-black hover:bg-transparent hover:text-black transition duration-300 ${
+                isLocked ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
+              {isLocked ? "ACCOUNT LOCKED" : "LOGIN"}
             </button>
           </form>
           <div className="mt-2">
             <p>
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link to="/register" className="text-blue-400">
                 Register here{" "}
               </Link>

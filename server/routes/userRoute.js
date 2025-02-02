@@ -11,6 +11,7 @@ import {
   rejectBloggerRequest,
   revokeBloggerPermission,
   bloggerRequest,
+  getActivityLog,
 } from "../controllers/userController.js";
 import { adminGuard, authGuard } from "../middlewares/authGuard.js";
 
@@ -25,6 +26,7 @@ router.post("/blogger-request",authGuard, getBloggerRequest);
 router.get("/get-request",authGuard,adminGuard, bloggerRequest);
 router.put("/approve-blogger/:userId",authGuard,adminGuard, approveBloggerRequest);
 router.get("/get-bloggers",authGuard,adminGuard, getVerifiedBloggers);
+router.get("/activity-log",authGuard,adminGuard, getActivityLog);
 router.put("/reject-blogger/:userId",authGuard,adminGuard, rejectBloggerRequest);
 router.put("/revoke-blogger/:userId",authGuard,adminGuard, revokeBloggerPermission);
 

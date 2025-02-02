@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { TfiWrite } from "react-icons/tfi";
-import { GrUpdate } from "react-icons/gr";
+// import { GrUpdate } from "react-icons/gr";
 import { BiSolidCollection } from "react-icons/bi";
 import { FaUsersCog } from "react-icons/fa";
 import { MdDashboardCustomize, MdCategory } from "react-icons/md";
@@ -32,6 +32,11 @@ const AdminMenu = () => {
       icon: <FaUsersCog className="h-6 w-auto" />,
       label: "Manage Users",
       link: "manage-users",
+    },
+    {
+      icon: <FaUsersCog className="h-6 w-auto" />,
+      label: "Activity Log",
+      link: "activity-logs",
     },
     {
       icon: <FaUsersCog className="h-6 w-auto" />,

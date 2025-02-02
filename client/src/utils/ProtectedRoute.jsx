@@ -1,8 +1,13 @@
+import { useSelector } from "react-redux";
+import { Outlet, Navigate } from "react-router-dom";
 
 const ProtectedRoute = () => {
-  return (
-    <div>ProtectedRoute</div>
-  )
-}
+  const userState = useSelector((state) => state.user);
 
-export default ProtectedRoute
+  if (userState?.userInfo.admin) {
+    return <Outlet />;
+  }
+  return <Navigate to="/unauthorized" replace />;
+};
+
+export default ProtectedRoute;

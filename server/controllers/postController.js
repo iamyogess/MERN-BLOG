@@ -217,5 +217,4 @@ const getAllPosts = async (req, res, next) => {
   }
 };
 
-
 export { createPost, getPost, getAllPosts, deletePost, updatePost };

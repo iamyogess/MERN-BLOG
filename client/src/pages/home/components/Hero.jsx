@@ -10,7 +10,7 @@ const Hero = () => {
       }}
     >
       {/* Overlay to darken the background */}
-      <div className="absolute inset-0 bg-black opacity-50"></div>
+      <div className="absolute h-screen inset-0 bg-black opacity-50"></div>
 
       {/* Content on top of the darkened background */}
       <div className="relative z-99 container text-white flex items-center justify-center h-screen px-6">

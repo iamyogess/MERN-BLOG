@@ -57,7 +57,7 @@ const AdminMenu = () => {
 
   return (
     <nav
-      className="max-w-xl w-full bg-white p-8 h-screen border shadow-lg rounded-md"
+      className="max-w-xl w-full bg-white p-8 h-max border shadow-lg rounded-md"
       aria-label="Admin navigation menu"
     >
       <ul className="flex flex-col items-start">
@@ -65,7 +65,6 @@ const AdminMenu = () => {
           <li
             key={item.label}
             className="flex items-center gap-4 py-4 px-4 w-full rounded-md hover:bg-gray-200"
-           
           >
             <span className="text-3xl">{item.icon}</span>
             <Link to={item.link} className="font-semibold border-b p-2">

@@ -20,6 +20,7 @@ import VerifiedBloggers from "./pages/admin/pages/VerifiedBloggers";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import UnauthorizedPage from "./pages/home/UnauthorizedPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import ActivityLogs from "./components/ActivityLogs";
 
 const App = () => {
   return (
@@ -45,6 +46,7 @@ const App = () => {
             <Route path="manage-users" element={<ManageUsers />} />
             <Route path="blogger-request" element={<BloggerRequest />} />
             <Route path="verified-bloggers" element={<VerifiedBloggers />} />
+            <Route path="activity-logs" element={<ActivityLogs />} />
           </Route>
         </Route>
       </Routes>

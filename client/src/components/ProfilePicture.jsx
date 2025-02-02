@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { stables } from "../constants";
 import { HiOutlineCamera } from "react-icons/hi";
 import CropEasy from "./CropImage/CropEasy";
@@ -17,7 +17,7 @@ const ProfilePicture = ({ avatar }) => {
   const [openCrop, setOpenCrop] = useState(false);
   const [photo, setPhoto] = useState(null);
 
-  const { mutate, isLoading } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: ({ token: token, formData: formData }) => {
       return uploadProfilePicture({ token: token, formData: formData });
     },

@@ -25,6 +25,8 @@ import Contact from "./pages/Contact";
 import Services from "./pages/Services";
 import About from "./pages/About";
 
+//made some changes hehehhehehehe
+
 const App = () => {
   return (
     <>

@@ -1,15 +1,20 @@
 import axios from "axios";
 
+const api = axios.create({
+  baseURL: "http://localhost:5000/api",
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 const signup = async ({ name, email, password }) => {
   try {
-    const { data } = await axios.post(
-      "http://127.0.0.1:5000/api/user/register",
-      {
-        name,
-        email,
-        password,
-      }
-    );
+    const { data } = await api.post("/user/register", {
+      name,
+      email,
+      password,
+    });
     return data;
   } catch (error) {
     if (error.response && error.response.data.message) {
@@ -21,7 +26,7 @@ const signup = async ({ name, email, password }) => {
 
 const login = async ({ email, password }) => {
   try {
-    const { data } = await axios.post("http://127.0.0.1:5000/api/user/login", {
+    const { data } = await api.post("/user/login", {
       email,
       password,
     });
@@ -122,7 +127,6 @@ const sendBloggerRequest = async ({ token }) => {
   }
 };
 
-
 const getBloggerRequests = async ({ token }) => {
   const config = {
     headers: {
@@ -131,7 +135,7 @@ const getBloggerRequests = async ({ token }) => {
   };
   try {
     const { data } = await axios.get(
-      'http://127.0.0.1:5000/api/user/get-request',
+      "http://127.0.0.1:5000/api/user/get-request",
       config
     );
     return data;
@@ -143,7 +147,7 @@ const getBloggerRequests = async ({ token }) => {
   }
 };
 
- const rejectBloggerRequests = async ({ token, bloggerId }) => {
+const rejectBloggerRequests = async ({ token, bloggerId }) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -164,7 +168,7 @@ const getBloggerRequests = async ({ token }) => {
   }
 };
 
- const approveBloggerRequests = async ({ token, bloggerId }) => {
+const approveBloggerRequests = async ({ token, bloggerId }) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -182,7 +186,7 @@ const getBloggerRequests = async ({ token }) => {
       throw new Error(error.response.data.message);
     }
     throw new Error(error.message);
-  }//fixxxx
+  } //fixxxx
 };
 
 const getVerifiedBloggerRequests = async ({ token }) => {
@@ -206,6 +210,15 @@ const getVerifiedBloggerRequests = async ({ token }) => {
   }
 };
 
-
-
-export { signup, login, getUserProfile, updateProfile, uploadProfilePicture,sendBloggerRequest,getBloggerRequests,rejectBloggerRequests,approveBloggerRequests,getVerifiedBloggerRequests };
+export {
+  signup,
+  login,
+  getUserProfile,
+  updateProfile,
+  uploadProfilePicture,
+  sendBloggerRequest,
+  getBloggerRequests,
+  rejectBloggerRequests,
+  approveBloggerRequests,
+  getVerifiedBloggerRequests,
+};

@@ -14,7 +14,7 @@ const Register = () => {
   const dispatch = useDispatch();
   const userState = useSelector((state) => state.user);
 
-  const { mutate, isLoading } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: ({ name, email, password }) => {
       return signup({ name, email, password });
     },
@@ -37,7 +37,7 @@ const Register = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
     watch,
   } = useForm({
     defaultValues: {
@@ -127,13 +127,15 @@ const Register = () => {
                 id="password"
                 placeholder="Password"
                 {...register("password", {
-                  minLength: {
-                    value: 6,
-                    message: "Password length must be at least 1 character!",
-                  },
                   required: {
-                    required: true,
+                    value: true,
                     message: "Password is required!",
+                  },
+                  pattern: {
+                    value:
+                      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*]).{6,}$/,
+                    message:
+                      "Password must contain at least 6 characters, one uppercase letter, one lowercase letter, one number, and one special character (!@#$%^&*)",
                   },
                 })}
                 className={`px-10 py-4 border-2 border-black rounded-lg ${
@@ -145,6 +147,14 @@ const Register = () => {
                   {errors.password?.message}
                 </p>
               )}
+              {/* Password requirements helper text */}
+              <ul className="text-xs text-gray-500 list-disc ml-4">
+                <li>At least 6 characters long</li>
+                <li>One uppercase letter (A-Z)</li>
+                <li>One lowercase letter (a-z)</li>
+                <li>One number (0-9)</li>
+                <li>One special character (!@#$%^&*)</li>
+              </ul>
             </div>
             {/* CONFIRM PASSWORD  */}
             <div className="flex justify-center items-start flex-col gap-y-2">

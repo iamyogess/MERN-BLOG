@@ -22,6 +22,14 @@ const registerUser = async (req, res, next) => {
     // Generate token
     const token = await user.generateJWT();
 
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: false, // Set to true if using HTTPS
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+
     // Respond with user data
     return res.status(201).json({
       _id: user.id,
@@ -40,30 +48,67 @@ const registerUser = async (req, res, next) => {
 const loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
-    //check if user exists or not
+    
+    // Find user
     let user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: "User does not exist!" });
     }
 
-    const token = await user.generateJWT();
-
-    const comparePassword = await user.comparePassword(password);
-
-    if (comparePassword) {
-      return res.status(201).json({
-        _id: user.id,
-        avatar: user.avatar,
-        name: user.name,
-        email: user.email,
-        verified: user.verified,
-        admin: user.admin,
-        token,
+    // Check if account is locked
+    if (user.isLocked()) {
+      const timeLeft = Math.ceil((user.lockUntil - Date.now()) / 1000 / 60); // Time left in minutes
+      return res.status(403).json({
+        message: `Account is locked. Please try again after ${timeLeft} minutes.`
       });
-    } else {
+    }
+
+    // Check password
+    const comparePassword = await user.comparePassword(password);
+    
+    if (!comparePassword) {
+      // Increment login attempts
+      user.loginAttempts += 1;
+      
+      // Lock account if attempts exceed 4
+      if (user.loginAttempts >= 4) {
+        user.lockUntil = Date.now() + (15 * 60 * 1000); // Lock for 15 minutes
+        await user.save();
+        return res.status(403).json({
+          message: "Account locked for 15 minutes due to too many failed attempts."
+        });
+      }
+      
+      await user.save();
       throw new Error("Invalid email or password!");
     }
+
+    // Reset login attempts on successful login
+    user.loginAttempts = 0;
+    user.lockUntil = undefined;
+    await user.save();
+
+    // Generate token and proceed with successful login
+    const token = await user.generateJWT();
+    
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: false, // Set to true if using HTTPS
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+
+    return res.status(201).json({
+      _id: user.id,
+      avatar: user.avatar,
+      name: user.name,
+      email: user.email,
+      verified: user.verified,
+      admin: user.admin,
+      token,
+    });
+    
   } catch (error) {
     next(error);
   }

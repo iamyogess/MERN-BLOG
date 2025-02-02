@@ -53,7 +53,7 @@ app.use(invalidPathHandler);
 app.use(errorResponseHandler);
 
 //port
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8000;
 
 //listening to the server
 app.listen(PORT, () => {

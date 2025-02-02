@@ -3,7 +3,7 @@ import axios from "axios";
 const getCategories = async () => {
   try {
     const { data } = await axios.get(
-      "http://localhost:5000/api/category/get-categories"
+      "http://localhost:8000/api/category/get-categories"
     );
     return data;
   } catch (error) {
@@ -19,7 +19,7 @@ const createCategory = async ({ token, title }) => {
       },
     };
     const { data } = await axios.post(
-      "http://localhost:5000/api/category/create-category",
+      "http://localhost:8000/api/category/create-category",
       { title },
       config
     );
@@ -40,7 +40,7 @@ const updateCategory = async ({ token, postCategoryId, updatedCategory }) => {
     };
 
     const { data } = await axios.put(
-      `http://localhost:5000/api/category/update-category/${postCategoryId}`,
+      `http://localhost:8000/api/category/update-category/${postCategoryId}`,
       { title: updatedCategory },
       config
     );
@@ -62,7 +62,7 @@ const deleteCategory = async ({ token, postCategoryId }) => {
     console.log(postCategoryId);
 
     const { data } = await axios.delete(
-      `http://localhost:5000/api/category/${postCategoryId}`,
+      `http://localhost:8000/api/category/${postCategoryId}`,
       config
     );
     return data;

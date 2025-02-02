@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "http://localhost:8000/api",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -47,7 +47,7 @@ const getUserProfile = async ({ token }) => {
   };
   try {
     const { data } = await axios.get(
-      "http://127.0.0.1:5000/api/user/profile",
+      "http://127.0.0.1:8000/api/user/profile",
       config
     );
     return data;
@@ -67,7 +67,7 @@ const updateProfile = async ({ token, userData }) => {
   };
   try {
     const { data } = await axios.put(
-      "http://127.0.0.1:5000/api/user/updateProfile",
+      "http://127.0.0.1:8000/api/user/updateProfile",
       userData,
       config
     );
@@ -89,7 +89,7 @@ const uploadProfilePicture = async ({ token, formData }) => {
   };
   try {
     const { data } = await axios.put(
-      "http://127.0.0.1:5000/api/user/uploadProfilePicture",
+      "http://127.0.0.1:8000/api/user/uploadProfilePicture",
       formData,
       config
     );
@@ -112,7 +112,7 @@ const sendBloggerRequest = async ({ token }) => {
   try {
     console.log("Sending request with config:", config);
     const { data } = await axios.post(
-      "http://127.0.0.1:5000/api/user/blogger-request",
+      "http://127.0.0.1:8000/api/user/blogger-request",
       {}, // Use an empty object as the body
       config
     );
@@ -135,7 +135,7 @@ const getBloggerRequests = async ({ token }) => {
   };
   try {
     const { data } = await axios.get(
-      "http://127.0.0.1:5000/api/user/get-request",
+      "http://127.0.0.1:8000/api/user/get-request",
       config
     );
     return data;
@@ -155,7 +155,7 @@ const rejectBloggerRequests = async ({ token, bloggerId }) => {
   };
   try {
     const { data } = await axios.put(
-      `http://127.0.0.1:5000/api/user/reject-blogger/${bloggerId}`,
+      `http://127.0.0.1:8000/api/user/reject-blogger/${bloggerId}`,
       {}, // No request body, but still required for PUT
       config
     );
@@ -176,7 +176,7 @@ const approveBloggerRequests = async ({ token, bloggerId }) => {
   };
   try {
     const { data } = await axios.put(
-      `http://127.0.0.1:5000/api/user/approve-blogger/${bloggerId}`,
+      `http://127.0.0.1:8000/api/user/approve-blogger/${bloggerId}`,
       {}, // No request body, but still required for PUT
       config
     );
@@ -198,7 +198,7 @@ const getVerifiedBloggerRequests = async ({ token }) => {
 
   try {
     const { data } = await axios.get(
-      "http://127.0.0.1:5000/api/user/get-bloggers",
+      "http://127.0.0.1:8000/api/user/get-bloggers",
       config
     );
     return data.bloggers; // Assuming `data.bloggers` contains the array of bloggers

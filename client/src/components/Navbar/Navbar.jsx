@@ -52,7 +52,7 @@ const Navbar = () => {
     <nav
       className={`fixed top-0 left-0 w-full z-10 transition-all duration-300 ease-in-out bg-white shadow-md`}
     >
-      <div className="container mx-auto px-4 flex justify-between items-center  ">
+      <div className="w-full max-w-screen-xl h-24 mx-auto px-4 flex justify-between items-center  ">
         {/* LOGO */}
         <div className={`text-2xl font-bold cursor-pointer`}>
           <Link to="/">

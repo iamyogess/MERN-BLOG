@@ -9,7 +9,7 @@ import {
 
 const Footer = () => {
   return (
-    <div className="w-full pt-1 md:pt-6 lg:pt-8 px-4 flex flex-col">
+    <div className="w-full max-w-screen-xl mx-auto pt-1 md:pt-6 lg:pt-8 px-4 flex flex-col">
       <div className="container mx-auto w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
         <div className="flex flex-col items-start gap-4 flex-1 py-4">
           <Link

@@ -50,20 +50,20 @@ const loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     let user = await User.findOne({ email });
-    
+
     // Log attempt regardless of whether user exists
     const logActivity = async (userId, action, description) => {
       await ActivityLog.create({
         userId: userId || null,
         action,
-        description
+        description,
       });
     };
 
     if (!user) {
       await logActivity(
         null,
-        'login_failed',
+        "login_failed",
         `Failed login attempt for email: ${email} - User not found`
       );
       return res.status(404).json({ message: "User does not exist!" });
@@ -74,44 +74,45 @@ const loginUser = async (req, res, next) => {
       const timeLeft = Math.ceil((user.lockUntil - Date.now()) / 1000 / 60);
       await logActivity(
         user._id,
-        'login_blocked',
+        "login_blocked",
         `Login blocked - Account locked for ${timeLeft} more minutes`
       );
       return res.status(403).json({
-        message: `Account is locked. Please try again after ${timeLeft} minutes.`
+        message: `Account is locked. Please try again after ${timeLeft} minutes.`,
       });
     }
 
     // Check password
     const comparePassword = await user.comparePassword(password);
-    
+
     if (!comparePassword) {
       // Increment login attempts
       user.loginAttempts += 1;
-      
+
       // Lock account if attempts exceed 4
       if (user.loginAttempts >= 4) {
-        user.lockUntil = Date.now() + (15 * 60 * 1000); // Lock for 15 minutes
+        user.lockUntil = Date.now() + 15 * 60 * 1000; // Lock for 15 minutes
         await user.save();
-        
+
         await logActivity(
           user._id,
-          'account_locked',
+          "account_locked",
           `Account locked for 15 minutes due to 4 failed login attempts`
         );
-        
+
         return res.status(403).json({
-          message: "Account locked for 15 minutes due to too many failed attempts."
+          message:
+            "Account locked for 15 minutes due to too many failed attempts.",
         });
       }
-      
+
       await user.save();
       await logActivity(
         user._id,
-        'login_failed',
+        "login_failed",
         `Failed login attempt (${user.loginAttempts}/4 attempts)`
       );
-      
+
       throw new Error("Invalid email or password!");
     }
 
@@ -121,20 +122,16 @@ const loginUser = async (req, res, next) => {
     await user.save();
 
     // Log successful login
-    await logActivity(
-      user._id,
-      'login_success',
-      'User logged in successfully'
-    );
+    await logActivity(user._id, "login_success", "User logged in successfully");
 
     const token = await user.generateJWT();
-    
-    res.cookie('token', token, {
+
+    res.cookie("token", token, {
       httpOnly: true,
       secure: false,
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 7 * 24 * 60 * 60 * 1000
+      sameSite: "lax",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return res.status(201).json({
@@ -146,7 +143,6 @@ const loginUser = async (req, res, next) => {
       admin: user.admin,
       token,
     });
-    
   } catch (error) {
     next(error);
   }
@@ -412,5 +408,5 @@ export {
   rejectBloggerRequest,
   revokeBloggerPermission,
   bloggerRequest,
-  getActivityLog
+  getActivityLog,
 };

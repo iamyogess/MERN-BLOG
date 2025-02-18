@@ -8,9 +8,9 @@ const createPost = async (req, res, next) => {
   try {
     const upload = uploadPicture.single("postPicture");
     upload(req, res, async function (err) {
-      const { title, caption, body, category, tags } = req.body;
+      const { title, caption, body, category } = req.body;
 
-      if (!title || !caption || !body || !category || !tags) {
+      if (!title || !caption || !body || !category) {
         return res.status(400).json({ message: "All fields are required!" });
       }
       const user = req.user._id;
@@ -31,7 +31,6 @@ const createPost = async (req, res, next) => {
           title,
           caption,
           category,
-          tags,
           body,
           slug: uuid4(),
           user,
@@ -53,7 +52,6 @@ const createPost = async (req, res, next) => {
 const updatePost = async (req, res, next) => {
   try {
     const post = await Post.findOne({ slug: req.params.slug });
-
     if (!post) {
       const error = new Error("Post was not found!");
       next(error);
@@ -62,47 +60,50 @@ const updatePost = async (req, res, next) => {
 
     const upload = uploadPicture.single("postPicture");
 
-    const handleUpdateData = async (data) => {
-      const { title, caption, slug, body, tags, category } = JSON.parse(data);
-      post.title = title || post.title;
-      post.caption = caption || post.caption;
-      post.slug = slug || post.slug;
-      post.body = body || post.body;
-      post.tags = tags || post.tags;
-      post.category = category || post.category;
-
-      const updatePost = await post.save();
-      return res.json(updatePost);
-    };
-
     upload(req, res, async function (err) {
       if (err) {
         const error = new Error(
           "An unknown error occurred when uploading " + err.message
         );
         return next(error);
-      } else {
+      }
+
+      try {
+        // Handle file upload if exists
         if (req.file) {
-          let filename;
-          filename = post.photo;
+          const filename = post.photo;
           if (filename) {
             fileRemover(filename);
           }
           post.photo = req.file.filename;
-          handleUpdateData(req.body.document);
-        } else {
-          let filename;
-          filename = post.photo;
-          post.photo = "";
-          fileRemover(filename);
-          handleUpdateData(req.body.document);
         }
+
+        // Process document data
+        if (!req.body.document) {
+          return next(new Error("No document data provided"));
+        }
+
+        const parsedData = JSON.parse(req.body.document);
+        const { title, caption, body, category } = parsedData;
+
+        // Update post fields
+        post.title = title || post.title;
+        post.caption = caption || post.caption;
+        post.body = body || post.body;
+        post.category = category || post.category;
+
+        const updatedPost = await post.save();
+        return res.json(updatedPost);
+      } catch (error) {
+        return next(new Error("Error processing update: " + error.message));
       }
     });
   } catch (error) {
     next(error);
   }
 };
+
+export default updatePost;
 
 const deletePost = async (req, res, next) => {
   try {

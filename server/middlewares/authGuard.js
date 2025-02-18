@@ -31,4 +31,16 @@ const adminGuard = async (req, res, next) => {
   }
 };
 
-export { authGuard, adminGuard };
+const bloggerGuard = async (req, res, next) => {
+  try {
+    if (req.user && req.user.blogger) {
+      next();
+    }
+  } catch (error) {
+    let err = new Error("Not authorized as blogger!");
+    err.statusCode = 401;
+    next(err);
+  }
+};
+
+export { authGuard, adminGuard, bloggerGuard };

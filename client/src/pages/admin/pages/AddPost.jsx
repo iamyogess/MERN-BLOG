@@ -46,7 +46,7 @@ const AddPost = () => {
   const [title, setTitle] = useState("");
   const [caption, setCaption] = useState("");
   const [category, setCategory] = useState([]);
-  const [tags, setTags] = useState([]);
+  // const [tags, setTags] = useState([]);
   const [body, setBody] = useState("");
 
   const { mutate: mutateCreatePostDetails, isLoading: isLoadingPostDetails } =
@@ -87,7 +87,7 @@ const AddPost = () => {
     newData.append("title", title);
     newData.append("caption", caption);
     newData.append("category", category);
-    newData.append("tags", tags);
+    // newData.append("tags", tags);
     newData.append("body", body);
 
     try {
@@ -202,7 +202,7 @@ const AddPost = () => {
         </div>
 
         {/* Tags Section */}
-        <div className="flex items-start flex-col w-full max-w-xs">
+        {/* <div className="flex items-start flex-col w-full max-w-xs">
           <label
             htmlFor="tags"
             className="py-1 text-sm md:text-lg text-gray-600"
@@ -216,7 +216,7 @@ const AddPost = () => {
             isMulti
             onChange={(newValue) => setTags(newValue.map((item) => item.value))}
           />
-        </div>
+        </div> */}
 
         {/* Body Section */}
         <div className="flex items-start flex-col w-full max-w-xs">

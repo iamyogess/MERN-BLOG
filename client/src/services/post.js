@@ -66,25 +66,23 @@ const deletePost = async ({ slug, token }) => {
   }
 };
 
-const updatePost = async ({ slug, token, blogData }) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
+export const updatePost = async ({ updatedData, slug, token }) => {
   try {
     const { data } = await axios.put(
       `http://localhost:8000/api/post/${slug}`,
-      blogData,
-      config
+      updatedData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
     );
     return data;
   } catch (error) {
-    const errorMessage =
-      error.response?.data?.message || error.message || "An error occurred";
+    const errorMessage = error.response?.data?.message || error.message;
     console.error("Error updating post:", errorMessage);
     throw new Error(errorMessage);
   }
 };
-
-export { createPost, getAllPosts, deletePost, updatePost, getSinglePost };
+export { createPost, getAllPosts, deletePost, getSinglePost };

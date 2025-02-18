@@ -61,7 +61,7 @@ const Contact = () => {
   };
 
   return (
-    <section className="py-8 mt-10">
+    <section id="contact" className="py-8 mt-10">
       <div className="container mx-auto px-6 lg:px-20">
         <h2 className="text-4xl font-bold text-center mb-5 text-gray-800">
           Contact Us

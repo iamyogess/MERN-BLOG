@@ -3,7 +3,7 @@ import { FaUsers, FaHeart } from "react-icons/fa";
 import { TbTargetArrow } from "react-icons/tb";
 const About = () => {
   return (
-    <section className="  py-12 mt-10">
+    <section id="about" className="  py-12 mt-10">
       <div className="container mx-auto px-6 lg:px-20">
         <h2 className="text-4xl font-bold text-center mb-6 text-gray-800">
           About Us

@@ -146,12 +146,13 @@ const Navbar = () => {
                       </li>
                     </Link>
 
-                    {userState?.userInfo?.admin || userState?.userInfo?.blogger && (
-                       <Link to="/admin">
-                       <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                         Dashboard
-                       </li>
-                     </Link>
+                    {(userState?.userInfo?.admin ||
+                      userState?.userInfo?.blogger) && (
+                      <Link to="/admin">
+                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                          Dashboard
+                        </li>
+                      </Link>
                     )}
 
                     {/* {userState?.userInfo?.admin && (

@@ -1,13 +1,30 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { TfiWrite } from "react-icons/tfi";
-// import { GrUpdate } from "react-icons/gr";
 import { BiSolidCollection } from "react-icons/bi";
 import { FaUsersCog } from "react-icons/fa";
 import { MdDashboardCustomize, MdCategory } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 const AdminMenu = () => {
-  const menuItems = [
+  const { userInfo } = useSelector((state) => state.user);
+
+  // Menu items for bloggers - only Add Post and Manage Posts
+  const bloggerMenuItems = [
+    {
+      icon: <TfiWrite className="h-6 w-auto" />,
+      label: "Add Post",
+      link: "add-post",
+    },
+    {
+      icon: <BiSolidCollection className="h-6 w-auto" />,
+      label: "Manage Posts",
+      link: "manage-posts",
+    },
+  ];
+
+  // Full menu items for admin
+  const adminMenuItems = [
     {
       icon: <MdDashboardCustomize className="h-6 w-auto" />,
       label: "Dashboard",
@@ -49,6 +66,9 @@ const AdminMenu = () => {
       link: "verified-bloggers",
     },
   ];
+
+  // Choose which menu items to display based on user role
+  const menuItems = userInfo?.blogger ? bloggerMenuItems : adminMenuItems;
 
   const [clickNavLink, setClickNavLink] = useState(false);
   const onClickNavItem = () => {

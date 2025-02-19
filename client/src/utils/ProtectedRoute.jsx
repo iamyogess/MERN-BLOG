@@ -5,13 +5,18 @@ const ProtectedRoute = () => {
   const userState = useSelector((state) => state.user);
   const userInfo = userState?.userInfo;
 
-  // If user is admin or blogger, redirect them away
-  if (userInfo?.admin || userInfo?.blogger) {
-    return <Navigate to="/unauthorized" replace />;
+  // If no user info or no token, redirect to login
+  if (!userInfo) {
+    return <Navigate to="/login" replace />;
   }
 
-  // Allow access to all other users
-  return <Outlet />;
+  // Only allow access if user is admin or blogger
+  if (userInfo.admin || userInfo.blogger) {
+    return <Outlet />;
+  }
+
+  // Redirect all other users
+  return <Navigate to="/unauthorized" replace />;
 };
 
 export default ProtectedRoute;

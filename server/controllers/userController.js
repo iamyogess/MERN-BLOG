@@ -141,6 +141,7 @@ const loginUser = async (req, res, next) => {
       email: user.email,
       verified: user.verified,
       admin: user.admin,
+      blogger: user.blogger, 
       token,
     });
   } catch (error) {

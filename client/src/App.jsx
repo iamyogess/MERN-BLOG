@@ -21,9 +21,9 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import UnauthorizedPage from "./pages/home/UnauthorizedPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ActivityLogs from "./components/ActivityLogs";
-import Contact from "./pages/Contact";
-import Services from "./pages/Services";
-import About from "./pages/About";
+import AboutUs from './pages/About/AboutUs';
+import ContactUs from "./pages/ContactUs/ContactUs";
+import Services from "./pages/ServicePage/Services";
 
 //made some changes hehehhehehehe
 
@@ -40,9 +40,9 @@ const App = () => {
         <Route path="/single-page/:slug" element={<SinglePage />} />
         <Route path="/comment" element={<Comment />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/about" element={<AboutUs />} />
         <Route path="/services" element={<Services />} />
-        <Route path="/contact" element={<Contact />} />
+        <Route path="/contact" element={<ContactUs />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/admin" element={<AdminLayout />}>

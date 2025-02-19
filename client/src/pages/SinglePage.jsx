@@ -83,57 +83,71 @@ const SinglePage = () => {
         <meta property="og:image" content={imageUrl} />
       </Helmet>
 
-      <article className="mt-20 py-5 container mx-auto px-4 md:max-w-5xl">
-        {/* Post metadata */}
-        <div className="flex flex-wrap justify-center items-center gap-x-5 py-3 text-sm md:text-base font-semibold text-gray-700">
-          <time dateTime={post.createdAt}>{formattedDate}</time>
-          <span className="hidden md:inline">•</span>
-          <span className="underline hover:text-blue-600 transition-colors">
-            {post.user.name}
-          </span>
-          <span className="hidden md:inline">•</span>
-          <span className="bg-gray-100 px-3 py-1 rounded-full">
-            {post.category.title}
-          </span>
-        </div>
+      <article className="mt-24 py-8 container mx-auto px-4 md:px-6 lg:px-8 max-w-4xl">
+  {/* Post Header Section */}
+  <header className="mb-8 text-center">
+    {/* Category & Metadata */}
+    <div className="flex flex-wrap justify-center items-center gap-x-4 text-sm text-gray-600 mb-4">
+      <span className="bg-gray-100 px-4 py-1.5 rounded-full font-medium">
+        {post.category.title}
+      </span>
+      <span className="hidden md:inline">•</span>
+      <time dateTime={post.createdAt} className="font-medium">
+        {formattedDate}
+      </time>
+      <span className="hidden md:inline">•</span>
+      <span className="hover:text-blue-600 transition-colors cursor-pointer font-medium">
+        {post.user.name}
+      </span>
+    </div>
 
-        {/* Post title */}
-        <h1 className="text-xl md:text-3xl lg:text-4xl font-bold py-4 text-center">
-          {post.title}
-        </h1>
+    {/* Title */}
+    <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold leading-tight text-gray-900 mb-8">
+      {post.title}
+    </h1>
+  </header>
 
-        {/* Post content */}
-        <div className="md:max-w-5xl mx-auto space-y-6">
-          <figure className="aspect-video relative overflow-hidden rounded-xl">
-            <img
-              src={imageUrl}
-              alt={post.title}
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </figure>
+  {/* Featured Image */}
+  <figure className="aspect-[16/9] mb-12 rounded-xl overflow-hidden shadow-lg">
+    <img
+      src={imageUrl}
+      alt={post.title}
+      className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
+      loading="lazy"
+    />
+  </figure>
 
-          <div className="prose prose-lg md:prose-xl max-w-none">
-            {post.body.split('\n').map((paragraph, index) => (
-              <p key={index} className="text-base md:text-lg leading-relaxed text-gray-800">
-                {paragraph}
-              </p>
-            ))}
-          </div>
-        </div>
+  {/* Article Content */}
+  <div className="prose prose-lg lg:prose-xl mx-auto">
+    {post.body.split('\n').map((paragraph, index) => (
+      <p 
+        key={index} 
+        className="text-gray-800 leading-relaxed mb-6 text-lg"
+      >
+        {paragraph}
+      </p>
+    ))}
+  </div>
 
-        {/* Comments section */}
-        {userState.userInfo?.token ? (
-          <section className="mt-12">
-            <h2 className="text-2xl font-bold mb-6">Comments</h2>
-            <Comment />
-          </section>
-        ) : (
-          <p className="text-center mt-12 text-gray-600">
-            Please log in to leave a comment.
-          </p>
-        )}
-      </article>
+  {/* Comments Section */}
+  <section className="mt-16 pt-8 border-t border-gray-200">
+    <h2 className="text-2xl font-bold text-gray-900 mb-8">
+      Discussion
+    </h2>
+    {userState.userInfo?.token ? (
+      <Comment />
+    ) : (
+      <div className="text-center py-8 bg-gray-50 rounded-lg">
+        <p className="text-gray-600 mb-4">
+          Join the discussion
+        </p>
+        <button className="inline-flex items-center justify-center px-6 py-2 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+          Log in to comment
+        </button>
+      </div>
+    )}
+  </section>
+</article>
     </MainLayout>
   );
 };

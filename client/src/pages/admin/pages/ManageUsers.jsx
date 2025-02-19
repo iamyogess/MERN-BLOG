@@ -1,6 +1,27 @@
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
+import { useSelector } from "react-redux";
+import { getAllUsers } from "../../../services/user";
+import { stables } from "../../../constants";
 
 const ManageUsers = () => {
+  const userState = useSelector((state) => state.user);
+
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () => {
+      if (!userState?.userInfo?.token) {
+        throw new Error("Token is missing");
+      }
+      return getAllUsers({ token: userState.userInfo.token });
+    },
+    enabled: !!userState?.userInfo?.token, // Only fetch when token is available
+  });
+
+  console.log("Users Data:", data);
+  console.log("Error:", error);
+  console.log("Loading:", isLoading);
+
   return (
     <section className="overflow-x-auto">
       <div className="container mx-auto">
@@ -28,36 +49,29 @@ const ManageUsers = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td className="px-4 py-2 border border-gray-300">
-                <img
-                  src="https://via.placeholder.com/50"
-                  alt="Profile"
-                  className="w-12 h-12 rounded-full"
-                />
-              </td>
-              <td className="px-4 py-2 border border-gray-300">John Doe</td>
-              <td className="px-4 py-2 border border-gray-300">
-                john@example.com
-              </td>
-              <td className="px-4 py-2 border border-gray-300">Admin</td>
-              <td className="px-4 py-2 border border-gray-300">Verified</td>
-            </tr>
-            <tr>
-              <td className="px-4 py-2 border border-gray-300">
-                <img
-                  src="https://via.placeholder.com/50"
-                  alt="Profile"
-                  className="w-12 h-12 rounded-full"
-                />
-              </td>
-              <td className="px-4 py-2 border border-gray-300">Jane Smith</td>
-              <td className="px-4 py-2 border border-gray-300">
-                jane@example.com
-              </td>
-              <td className="px-4 py-2 border border-gray-300">Editor</td>
-              <td className="px-4 py-2 border border-gray-300">Pending</td>
-            </tr>
+            {data?.allUsers?.map((user) => (
+              <tr key={user._id}>
+                <td className="px-4 py-2 border border-gray-300">
+                  <img
+                    src={stables.UPLOAD_FOLDER_BASE_URL + user.avatar}
+                    alt="Profile Picture"
+                    className=" w-12 h-12 object-cover "
+                  />
+                </td>
+                <td className="px-4 py-2 border border-gray-300">
+                  {user.name}
+                </td>
+                <td className="px-4 py-2 border border-gray-300">
+                  {user.email}
+                </td>
+                <td className="px-4 py-2 border border-gray-300">
+                  {user.admin ? "Admin" : "User"}
+                </td>
+                <td className="px-4 py-2 border border-gray-300">
+                  {user.blogger ? "blogger" : "Not a blogger"}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

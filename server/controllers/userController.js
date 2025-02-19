@@ -223,7 +223,7 @@ const uploadProfilePicture = async (req, res, next) => {
     upload(req, res, async function (err) {
       if (err) {
         const error = new Error(
-          "An unknown error ocurred when uploading " + err.message
+          "An unknown error occurred when uploading " + err.message
         );
         next(error);
       } else {
@@ -269,6 +269,16 @@ const uploadProfilePicture = async (req, res, next) => {
     next(error);
   }
 };
+
+const getAllUsers = async (req, res, next) => {
+  try {
+    const allUsers = await User.find({});
+    return res.status(200).json({ message: "Users", allUsers });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 
 const getBloggerRequest = async (req, res, next) => {
   try {
@@ -409,4 +419,5 @@ export {
   revokeBloggerPermission,
   bloggerRequest,
   getActivityLog,
+  getAllUsers,
 };

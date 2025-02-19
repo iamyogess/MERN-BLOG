@@ -39,6 +39,29 @@ const login = async ({ email, password }) => {
   }
 };
 
+const getAllUsers = async ({ token }) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  try {
+    const { data } = await axios.get(
+      "http://127.0.0.1:8000/api/user/all-users",
+      config
+    );
+  
+    return data; 
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    if (error.response && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
+    throw new Error(error.message);
+  }
+};
+
 const getUserProfile = async ({ token }) => {
   const config = {
     headers: {
@@ -221,4 +244,5 @@ export {
   rejectBloggerRequests,
   approveBloggerRequests,
   getVerifiedBloggerRequests,
+  getAllUsers,
 };

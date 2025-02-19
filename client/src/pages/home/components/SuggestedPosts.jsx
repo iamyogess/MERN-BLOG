@@ -24,7 +24,7 @@ const SuggestedPosts = () => {
   }
 
   return (
-    <div className="w-full max-w-screen-xl mx-auto my-4 p-2">
+    <div className="w-full max-w-screen-xl mx-auto my-4 px-4">
       <div className="flex flex-col space-y-4">
         <h1 className="text-3xl font-bold">Suggested Posts</h1>
 
